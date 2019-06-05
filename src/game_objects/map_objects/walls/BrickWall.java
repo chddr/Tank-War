@@ -1,4 +1,4 @@
-package game_objects.map_objects;
+package game_objects.map_objects.walls;
 
 public class BrickWall extends Wall {
 
