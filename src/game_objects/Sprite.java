@@ -26,6 +26,10 @@ public class Sprite {
 		image = Toolkit.getDefaultToolkit().createImage(imageName);
 	}
 
+	public Image getImage() {
+		return image;
+	}
+
 	public int getX() {
 		return x;
 	}
