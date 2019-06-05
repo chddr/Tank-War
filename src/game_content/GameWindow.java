@@ -1,3 +1,5 @@
+package game_content;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 

@@ -1,32 +1,33 @@
+package game_content;
+
+import map_tools.Level;
+import map_tools.Map;
 import game_objects.map_objects.MapObject;
-import game_objects.map_objects.walls.BrickWall;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameField extends JPanel implements Runnable, ActionListener {
 
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the tank because every map tile is divided into four destructible parts
 	 */
-	private final int MAP_SIZE = 26;
+	public static final int MAP_SIZE = 26;
 	/**
 	 * HOLY CONSTANT - BYTE
 	 */
-	private final int BYTE = 8;
+	public static final int BYTE = 8;
 	/**
 	 * Dimensions of a game field (height and width are always equal)
 	 */
-	private final int FIELD_DIMENSIONS = MAP_SIZE * BYTE;
+	public static final int FIELD_DIMENSIONS = MAP_SIZE * BYTE;
 	/**
 	 * Delay in miliseconds
 	 */
-	private final int DELAY = 25;
-	private List<MapObject> map = new ArrayList<>();
+	public static final int DELAY = 25;
+	private Map map = Map.getLevelMap(Level.ONE);
 
 	private Thread animator;
 
