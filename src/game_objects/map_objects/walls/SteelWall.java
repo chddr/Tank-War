@@ -9,7 +9,7 @@ public class SteelWall extends Wall {
 	}
 
 	private void init() {
-		loadImage("resources/sprites/brick_wall.png");
+		loadImage("resources/sprites/steel_wall.png");
 		getImageDimensions();
 	}
 }
