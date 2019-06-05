@@ -14,4 +14,3 @@ public class MapObject extends Sprite {
 	}
 
 }
-gi
