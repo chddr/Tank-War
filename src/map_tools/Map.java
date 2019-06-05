@@ -2,9 +2,10 @@ package map_tools;
 
 import game_content.GameField;
 import game_objects.map_objects.MapObject;
-import game_objects.map_objects.turf.Water;
 import game_objects.map_objects.impassables.BrickWall;
 import game_objects.map_objects.impassables.SteelWall;
+import game_objects.map_objects.turf.Cover;
+import game_objects.map_objects.turf.Water;
 
 import java.util.ArrayList;
 
@@ -40,11 +41,11 @@ public class Map extends ArrayList<MapObject> {
 						add(new Water(i * GameField.BYTE, j * GameField.BYTE));
 						break;
 					case 4:
+						add(new Cover(i * GameField.BYTE, j * GameField.BYTE));
 						break;
 				}
 			}
 		}
-
 	}
 
 	/**
