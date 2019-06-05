@@ -2,6 +2,7 @@ package map_tools;
 
 import game_content.GameField;
 import game_objects.map_objects.MapObject;
+import game_objects.map_objects.turf.Water;
 import game_objects.map_objects.walls.BrickWall;
 import game_objects.map_objects.walls.SteelWall;
 
@@ -22,6 +23,7 @@ public class Map extends ArrayList<MapObject> {
 
 	/**
 	 * Private constructor that generates map from the 2D array
+	 *
 	 * @param map 2d Array. Use reference in a class description.
 	 */
 	private Map(int[][] map) {
@@ -35,6 +37,7 @@ public class Map extends ArrayList<MapObject> {
 						add(new SteelWall(i * GameField.BYTE, j * GameField.BYTE));
 						break;
 					case 3:
+						add(new Water(i * GameField.BYTE, j * GameField.BYTE));
 						break;
 					case 4:
 						break;
@@ -46,6 +49,7 @@ public class Map extends ArrayList<MapObject> {
 
 	/**
 	 * Pre-made levels that match enums
+	 *
 	 * @param level number of level we want to make
 	 * @return made Map for a level
 	 */
