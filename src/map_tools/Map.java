@@ -3,8 +3,8 @@ package map_tools;
 import game_content.GameField;
 import game_objects.map_objects.MapObject;
 import game_objects.map_objects.turf.Water;
-import game_objects.map_objects.walls.BrickWall;
-import game_objects.map_objects.walls.SteelWall;
+import game_objects.map_objects.impassables.BrickWall;
+import game_objects.map_objects.impassables.SteelWall;
 
 import java.util.ArrayList;
 
