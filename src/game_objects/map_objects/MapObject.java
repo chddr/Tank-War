@@ -5,12 +5,10 @@ import game_objects.Sprite;
 public abstract class MapObject extends Sprite {
 
 	private boolean collidable;
-	private boolean destructible;
 
-	public MapObject(int x, int y, boolean collidable, boolean destructible) {
+	public MapObject(int x, int y, boolean collidable) {
 		super(x, y);
 		this.collidable = collidable;
-		this.destructible = destructible;
 	}
 
 }

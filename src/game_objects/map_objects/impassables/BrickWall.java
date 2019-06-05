@@ -1,9 +1,9 @@
 package game_objects.map_objects.impassables;
 
-public class BrickWall extends Impassable {
+public class BrickWall extends Impassable implements Destructible {
 
 	public BrickWall(int x, int y) {
-		super(x, y, true);
+		super(x, y);
 
 		init();
 	}
@@ -11,5 +11,10 @@ public class BrickWall extends Impassable {
 	private void init() {
 		loadImage("resources//sprites//brick_wall.png");
 		getImageDimensions();
+	}
+
+	@Override
+	public void destroy() {
+
 	}
 }
