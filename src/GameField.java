@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class GameField extends JPanel implements Runnable {
+public class GameField extends JPanel implements Runnable, ActionListener {
 
 	/**
 	 * Dimensions of a game field (height and width are always equal)
@@ -14,7 +16,6 @@ public class GameField extends JPanel implements Runnable {
 
 	private Thread animator;
 
-	private int x,y;
 
 	public GameField() {
 		initGameField();
@@ -25,7 +26,7 @@ public class GameField extends JPanel implements Runnable {
 	 */
 	private void initGameField() {
 		setBackground(Color.BLACK);
-		setPreferredSize(new Dimension(FIELD_DIMENSIONS,FIELD_DIMENSIONS));
+		setPreferredSize(new Dimension(FIELD_DIMENSIONS, FIELD_DIMENSIONS));
 
 
 	}
@@ -48,6 +49,11 @@ public class GameField extends JPanel implements Runnable {
 		Toolkit.getDefaultToolkit().sync();
 	}
 
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+	}
 
 	@Override
 	public void run() {
@@ -80,5 +86,9 @@ public class GameField extends JPanel implements Runnable {
 
 			beforeTime = System.currentTimeMillis();
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
 	}
 }
