@@ -2,6 +2,7 @@ package map_tools;
 
 import game_content.GameField;
 import game_objects.map_objects.MapObject;
+import game_objects.map_objects.impassables.Base;
 import game_objects.map_objects.impassables.BrickWall;
 import game_objects.map_objects.impassables.SteelWall;
 import game_objects.map_objects.turf.Cover;
@@ -46,6 +47,7 @@ public class Map extends ArrayList<MapObject> {
 				}
 			}
 		}
+		add(new Base(12*GameField.BYTE,24*GameField.BYTE));
 	}
 
 	/**
