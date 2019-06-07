@@ -10,13 +10,11 @@ public class Base extends Impassable implements Destructible {
 	}
 
 	private void init() {
-		loadImage("resources/sprites/base.png");
+		loadImage("resources/sprites/map/base.png");
 		getImageDimensions();
 	}
 
 	@Override
 	public void destroy() {
-		loadImage("resources/sprites/base_defeated.png");
-		getImageDimensions();
 	}
 }

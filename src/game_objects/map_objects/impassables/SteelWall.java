@@ -9,7 +9,7 @@ public class SteelWall extends Impassable {
 	}
 
 	private void init() {
-		loadImage("resources/sprites/steel_wall.png");
+		loadImage("resources/sprites/map/steel_wall.png");
 		getImageDimensions();
 	}
 }

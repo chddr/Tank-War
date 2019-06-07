@@ -11,7 +11,7 @@ public class BrickWall extends Impassable implements Destructible {
 	}
 
 	private void init() {
-		loadImage("resources/sprites/brick_wall.png");
+		loadImage("resources/sprites/map/brick_wall.png");
 		getImageDimensions();
 	}
 

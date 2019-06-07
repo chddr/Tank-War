@@ -8,7 +8,7 @@ public class Water extends Turf {
 	}
 
 	private void init() {
-		loadImage("resources/sprites/water.gif");
+		loadImage("resources/sprites/map/water.gif");
 		getImageDimensions();
 	}
 }

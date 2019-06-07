@@ -8,7 +8,7 @@ public class Cover extends Turf {
 	}
 
 	private void init() {
-		loadImage("resources/sprites/cover.png");
+		loadImage("resources/sprites/map/cover.png");
 		getImageDimensions();
 	}
 }
