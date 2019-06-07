@@ -1,5 +1,7 @@
 package game_objects.map_objects.impassables;
 
+import game_objects.Destructible;
+
 public class BrickWall extends Impassable implements Destructible {
 
 	public BrickWall(int x, int y) {

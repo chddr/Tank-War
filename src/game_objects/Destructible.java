@@ -1,4 +1,4 @@
-package game_objects.map_objects.impassables;
+package game_objects;
 
 public interface Destructible {
 	public void destroy();
