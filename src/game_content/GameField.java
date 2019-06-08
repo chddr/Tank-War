@@ -13,13 +13,17 @@ import java.awt.event.KeyEvent;
 public class GameField extends JPanel implements Runnable {
 
 	/**
+	 * Scale (for resize)
+	 */
+	public static final int SCALE = 4;
+	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
 	public static final int MAP_SIZE = 26;
 	/**
 	 * HOLY CONSTANT - BYTE
 	 */
-	public static final int BYTE = 8;
+	public static final int BYTE = 8 * SCALE;
 	/**
 	 * Dimensions of a game field (height and width are always equal)
 	 */
