@@ -16,13 +16,13 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Scale (for resize)
 	 */
-	public static final int SCALE = 4;
+	public static final int SCALE = 2;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
 	public static final int MAP_SIZE = 26;
 	/**
-	 * HOLY CONSTANT - BYTE
+	 * HOLY CONSTANT - Size of the one tile
 	 */
 	public static final int BYTE = 8 * SCALE;
 	/**
@@ -72,6 +72,9 @@ public class GameField extends JPanel implements Runnable {
 		animator.start();
 	}
 
+	/**
+	 * All actions that should be performed every game tick
+	 */
 	private void cycle() {
 		tank.move();
 		checkCollisions();
@@ -79,14 +82,11 @@ public class GameField extends JPanel implements Runnable {
 		Toolkit.getDefaultToolkit().sync();
 	}
 
+	/**
+	 * Checking collisions of tanks and other objects on the map
+	 */
 	private void checkCollisions() {
-		for (MapObject mo : map) {
-			if (mo.isCollidable()) {
-				if (mo.getBounds().intersects(tank.getBounds())) {
-					tank.setVisible(false);
-				}
-			}
-		}
+		//TODO its empty man
 	}
 
 	@Override
@@ -97,6 +97,11 @@ public class GameField extends JPanel implements Runnable {
 		drawMapObjects(g);
 	}
 
+	/**
+	 * Draw a tank on the specified graphics
+	 *
+	 * @param g Graphics to draw on
+	 */
 	private void drawTank(Graphics g) {
 		g.drawImage(tank.getImage(), tank.getX(), tank.getY(), this);
 	}
@@ -113,6 +118,9 @@ public class GameField extends JPanel implements Runnable {
 
 	}
 
+	/**
+	 * Method for running the game in a thread for continuous and uninterrupted game performance. We use a while-loop to perform some actions specified in a cycle method and then repaint the whole game.
+	 */
 	@Override
 	public void run() {
 
