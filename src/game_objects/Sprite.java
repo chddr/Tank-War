@@ -1,6 +1,5 @@
 package game_objects;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 
 public class Sprite {
@@ -36,6 +35,11 @@ public class Sprite {
 
 	public int getY() {
 		return y;
+	}
+
+	protected void move(int dx, int dy) {
+		x += dx;
+		y += dy;
 	}
 
 	public boolean isVisible() {

@@ -1,18 +1,19 @@
 package game_content;
 
+import game_objects.map_objects.MapObject;
+import game_objects.movables.Tank;
 import map_tools.Level;
 import map_tools.Map;
-import game_objects.map_objects.MapObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-public class GameField extends JPanel implements Runnable, ActionListener {
+public class GameField extends JPanel implements Runnable {
 
 	/**
-	 * Size of the game map relative to the tile size. Actually its twice as small relative to the tank because every map tile is divided into four destructible parts
+	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
 	public static final int MAP_SIZE = 26;
 	/**
@@ -26,8 +27,9 @@ public class GameField extends JPanel implements Runnable, ActionListener {
 	/**
 	 * Delay in miliseconds
 	 */
-	public static final int DELAY = 25;
-	private Map map = Map.getLevelMap(Level.ONE);
+	public static final int DELAY = 20;
+	private Map map;
+	private Tank tank;
 
 	private Thread animator;
 
@@ -49,7 +51,9 @@ public class GameField extends JPanel implements Runnable, ActionListener {
 	}
 
 	private void initMap() {
-
+		addKeyListener(new Adapter());
+		map = Map.getLevelMap(Level.ONE);
+		tank = new Tank(8 * BYTE, 24 * BYTE);
 	}
 
 	/**
@@ -64,19 +68,39 @@ public class GameField extends JPanel implements Runnable, ActionListener {
 	}
 
 	private void cycle() {
-		//TODO
-
+		tank.move();
+		checkCollisions();
 		//Synchronizing drawing because of buffering
 		Toolkit.getDefaultToolkit().sync();
+	}
+
+	private void checkCollisions() {
+		for (MapObject mo : map) {
+			if (mo.isCollidable()) {
+				if (mo.getBounds().intersects(tank.getBounds())) {
+					tank.setVisible(false);
+				}
+			}
+		}
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		drawTank(g);
 		drawMapObjects(g);
 	}
 
+	private void drawTank(Graphics g) {
+		g.drawImage(tank.getImage(), tank.getX(), tank.getY(), this);
+	}
+
+	/**
+	 * Draw all objects that are on the map
+	 *
+	 * @param g Graphics that we draw on
+	 */
 	private void drawMapObjects(Graphics g) {
 		for (MapObject mo : map)
 			if (mo.isVisible())
@@ -117,7 +141,16 @@ public class GameField extends JPanel implements Runnable, ActionListener {
 		}
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+	private class Adapter extends KeyAdapter {
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			tank.keyPressed(e);
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			tank.keyReleased(e);
+		}
 	}
 }
