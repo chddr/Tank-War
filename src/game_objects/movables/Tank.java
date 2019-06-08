@@ -23,20 +23,7 @@ public class Tank extends Sprite implements Destructible {
 	private void init() {
 		directions = new Image[4];
 		for (int i = 0; i < 4; i++) {
-			String dir;
-			switch (i) {
-				case 0:
-					dir = "west";
-					break;
-				case 1:
-					dir = "east";
-					break;
-				case 2:
-					dir = "north";
-					break;
-				default:
-					dir = "south";
-			}
+			String dir = Direction.values()[i].toString().toLowerCase();
 			String str = String.format("resources/sprites/player_tank/tank_%s.png", dir);
 			directions[i] = Toolkit.getDefaultToolkit().createImage(str);
 		}
@@ -49,32 +36,28 @@ public class Tank extends Sprite implements Destructible {
 
 	}
 
-	public void keyPressed(KeyEvent e) {
-
-		int key = e.getKeyCode();
+	public void changeDirection(Direction dir) {
 		dx = 0;
 		dy = 0;
 
-		if (key == KeyEvent.VK_LEFT) {
-			image = directions[0];
-			dx = -1;
+		switch (dir) {
+			case WEST:
+				image = directions[0];
+				dx = -2;
+				break;
+			case EAST:
+				image = directions[1];
+				dx = 2;
+				break;
+			case NORTH:
+				image = directions[2];
+				dy = -2;
+				break;
+			case SOUTH:
+				image = directions[3];
+				dy = 2;
+				break;
 		}
-
-		if (key == KeyEvent.VK_RIGHT) {
-			image = directions[1];
-			dx = 1;
-		}
-
-		if (key == KeyEvent.VK_UP) {
-			image = directions[2];
-			dy = -1;
-		}
-
-		if (key == KeyEvent.VK_DOWN) {
-			image = directions[3];
-			dy = 1;
-		}
-
 	}
 
 	public void keyReleased(KeyEvent e) {

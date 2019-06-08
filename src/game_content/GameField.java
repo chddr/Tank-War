@@ -1,6 +1,7 @@
 package game_content;
 
 import game_objects.map_objects.MapObject;
+import game_objects.movables.Direction;
 import game_objects.movables.Tank;
 import map_tools.Level;
 import map_tools.Map;
@@ -145,7 +146,22 @@ public class GameField extends JPanel implements Runnable {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			tank.keyPressed(e);
+			int key = e.getKeyCode();
+
+			switch (key) {
+				case KeyEvent.VK_LEFT:
+					tank.changeDirection(Direction.WEST);
+					break;
+				case KeyEvent.VK_RIGHT:
+					tank.changeDirection(Direction.EAST);
+					break;
+				case KeyEvent.VK_UP:
+					tank.changeDirection(Direction.NORTH);
+					break;
+				case KeyEvent.VK_DOWN:
+					tank.changeDirection(Direction.SOUTH);
+					break;
+			}
 		}
 
 		@Override

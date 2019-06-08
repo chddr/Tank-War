@@ -37,9 +37,12 @@ public class Sprite {
 		return y;
 	}
 
-	protected void move(int dx, int dy) {
-		x += dx;
-		y += dy;
+	protected void setX(int x) {
+		this.x = x;
+	}
+
+	protected void setY(int y) {
+		this.y = y;
 	}
 
 	public boolean isVisible() {
