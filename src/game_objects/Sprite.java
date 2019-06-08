@@ -1,5 +1,6 @@
 package game_objects;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 
 public class Sprite {
@@ -27,11 +28,6 @@ public class Sprite {
 
 	public Image getImage() {
 		return image;
-	}
-
-	protected void move(int dx, int dy) {
-		x += dx;
-		y += dy;
 	}
 
 	public int getX() {
