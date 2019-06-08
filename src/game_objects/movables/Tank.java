@@ -3,15 +3,19 @@ package game_objects.movables;
 import game_objects.Destructible;
 import game_objects.Sprite;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Tank extends Sprite implements Destructible {
 
 	/**
 	 * Directions images in such an order: west, east, north, south
 	 */
-	private Image[] directions;
+	private BufferedImage[] directions;
 	private int dx, dy;
 
 	public Tank(int x, int y) {
@@ -21,11 +25,16 @@ public class Tank extends Sprite implements Destructible {
 	}
 
 	private void init() {
-		directions = new Image[4];
+		directions = new BufferedImage[4];
 		for (int i = 0; i < 4; i++) {
 			String dir = Direction.values()[i].toString().toLowerCase();
 			String str = String.format("resources/sprites/player_tank/tank_%s.png", dir);
-			directions[i] = Toolkit.getDefaultToolkit().createImage(str);
+			try {
+				directions[i] = ImageIO.read(new File(str));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			directions[i] = scale(directions[i]);
 		}
 		image = directions[2];
 		getImageDimensions();
@@ -80,8 +89,12 @@ public class Tank extends Sprite implements Destructible {
 		}
 	}
 
+	/**
+	 * Method that moves the tank on the board. Should be used only when check for collision was already made.
+	 */
 	public void move() {
-		move(dx,dy);
+		setX(dx + getX());
+		setY(dy + getY());
 	}
 
 }
