@@ -52,7 +52,7 @@ public class GameField extends JPanel implements Runnable {
 
 	private void initMap() {
 		addKeyListener(new Adapter());
-		map = Map.getLevelMap(Level.ONE);
+		map = Map.getLevelMap(Level.TWO);
 		tank = new Tank(8 * BYTE, 24 * BYTE);
 	}
 
