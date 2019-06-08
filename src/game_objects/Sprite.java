@@ -8,7 +8,7 @@ public class Sprite {
 	private int width;
 	private int height;
 	protected boolean visible;
-	private Image image;
+	protected Image image;
 
 	public Sprite(int x, int y) {
 		this.x = x;

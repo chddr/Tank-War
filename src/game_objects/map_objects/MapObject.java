@@ -11,4 +11,7 @@ public abstract class MapObject extends Sprite {
 		this.collidable = collidable;
 	}
 
+	public boolean isCollidable() {
+		return collidable;
+	}
 }

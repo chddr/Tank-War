@@ -1,9 +1,11 @@
 package game_objects.map_objects.impassables;
 
-public class SteelWall extends Impassable {
+import game_objects.map_objects.MapObject;
+
+public class SteelWall extends MapObject {
 
 	public SteelWall(int x, int y) {
-		super(x,y);
+		super(x,y, true);
 
 		init();
 	}
