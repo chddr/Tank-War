@@ -8,7 +8,7 @@ public class Sprite {
 	private int y;
 	private int width;
 	private int height;
-	protected boolean visible;
+	private boolean visible;
 	protected Image image;
 
 	public Sprite(int x, int y) {
