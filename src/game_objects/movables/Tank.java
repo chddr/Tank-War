@@ -1,8 +1,8 @@
 package game_objects.movables;
 
+import game_content.GameField;
 import game_objects.Destructible;
 import game_objects.Sprite;
-import javafx.util.Pair;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,6 +17,7 @@ public class Tank extends Sprite implements Destructible {
 	 * Directions images in such an order: west, east, north, south
 	 */
 	private BufferedImage[] directions;
+	private final static int SPEED = 3;
 	private int dx, dy;
 	private Direction currentDir;
 
@@ -51,24 +52,44 @@ public class Tank extends Sprite implements Destructible {
 	public void changeDirection(Direction dir) {
 		dx = 0;
 		dy = 0;
+		//Slight move to fit the tank in the narrow corridors and other places
+		if (Direction.isTurn(currentDir, dir)) {
+			double coord;
+			switch (currentDir) {
+				case WEST:
+				case EAST:
+					coord = getX();
+					coord /= GameField.BYTE;
+					coord = Math.round(coord) * GameField.BYTE;
+					setX((int) coord);
+					break;
+				case NORTH:
+				case SOUTH:
+					coord = getY();
+					coord /= GameField.BYTE;
+					coord = Math.round(coord) * GameField.BYTE;
+					setY((int) coord);
+					break;
+			}
+		}
 		currentDir = dir;
 
 		switch (dir) {
 			case WEST:
 				image = directions[0];
-				dx = -1;
+				dx = -SPEED;
 				break;
 			case EAST:
 				image = directions[1];
-				dx = 1;
+				dx = SPEED;
 				break;
 			case NORTH:
 				image = directions[2];
-				dy = -1;
+				dy = -SPEED;
 				break;
 			case SOUTH:
 				image = directions[3];
-				dy = 1;
+				dy = SPEED;
 				break;
 		}
 	}
@@ -103,12 +124,13 @@ public class Tank extends Sprite implements Destructible {
 
 	/**
 	 * Method we use to see if tank can move. If it theoretically moved and collided with something, we don't move;
+	 *
 	 * @return Returns bounds that tank <u><b>would have</b></u> if it moved at this moment.
 	 */
 	public Rectangle getTheoreticalBounds() {
 		Rectangle rect = getBounds();
-		rect.x+=dx;
-		rect.y+=dy;
+		rect.x += dx;
+		rect.y += dy;
 		return rect;
 	}
 
