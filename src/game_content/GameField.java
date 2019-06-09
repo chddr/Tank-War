@@ -1,6 +1,7 @@
 package game_content;
 
 import game_objects.map_objects.MapObject;
+import game_objects.movables.Bullet;
 import game_objects.movables.Direction;
 import game_objects.movables.Tank;
 import map_tools.Level;
@@ -10,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class GameField extends JPanel implements Runnable {
 
@@ -34,6 +36,7 @@ public class GameField extends JPanel implements Runnable {
 	 */
 	public static final int DELAY = 15;
 	private Map map;
+	private ArrayList<Bullet> bullets;
 	private Tank tank;
 
 	private Thread animator;
@@ -59,6 +62,7 @@ public class GameField extends JPanel implements Runnable {
 		addKeyListener(new Adapter());
 		map = Map.getLevelMap(Level.TWO);
 		tank = new Tank(8 * BYTE, 24 * BYTE, Direction.NORTH);
+		bullets = new ArrayList<>();
 	}
 
 	/**
@@ -76,11 +80,18 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
-		if(!checkWallCollisions()) {
+		if (!checkWallCollisions()) {
 			tank.move();
 		}
+		moveBullets();
 		//Synchronizing drawing because of buffering
 		Toolkit.getDefaultToolkit().sync();
+	}
+
+	private void moveBullets() {
+		for (Bullet b : bullets) {
+				b.move();
+		}
 	}
 
 	/**
@@ -101,6 +112,21 @@ public class GameField extends JPanel implements Runnable {
 
 		drawTank(g);
 		drawMapObjects(g);
+		drawBullets(g);
+	}
+
+	/**
+	 * Draw a bullet on graphics
+	 *
+	 * @param g Graphics
+	 */
+	private void drawBullets(Graphics g) {
+		bullets = tank.getBullets();
+		for (Bullet b : bullets) {
+			if (b!= null && b.isVisible()) {
+				g.drawImage(b.getImage(), b.getX(), b.getY(), this);
+			}
+		}
 	}
 
 	/**
@@ -179,6 +205,8 @@ public class GameField extends JPanel implements Runnable {
 				case KeyEvent.VK_DOWN:
 					tank.changeDirection(Direction.SOUTH);
 					break;
+				case KeyEvent.VK_SPACE:
+					tank.fire();
 			}
 		}
 

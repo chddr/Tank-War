@@ -46,7 +46,7 @@ public class Sprite {
 	 * @param sbi image to scale
 	 * @return scaled image
 	 */
-	public static BufferedImage scale(BufferedImage sbi) {
+	protected static BufferedImage scale(BufferedImage sbi) {
 		int sc = GameField.SCALE;
 		BufferedImage dbi = null;
 		if (sbi != null) {

@@ -2,21 +2,14 @@ package game_objects.movables;
 
 import game_content.GameField;
 import game_objects.Destructible;
-import game_objects.Sprite;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 
 public class Tank extends Movable implements Destructible {
 
-	/**
-	 * Directions images in such an order: west, east, north, south
-	 */
 	private final static int SPEED = 2;
+	private ArrayList<Bullet> bullets;
 
 	public Tank(int x, int y, Direction dir) {
 		super(x, y, dir);
@@ -25,6 +18,7 @@ public class Tank extends Movable implements Destructible {
 	}
 
 	private void init() {
+		bullets = new ArrayList<>();
 		loadImage("resources/sprites/player_tank/tank_%s.png");
 		getImageDimensions();
 	}
@@ -99,5 +93,38 @@ public class Tank extends Movable implements Destructible {
 		}
 	}
 
+	/**
+	 * Get bullets that tank has shot
+	 * @return bullets
+	 */
+	public ArrayList<Bullet> getBullets() {
+		return bullets;
+	}
 
+	/**
+	 * Tank fires a bullet. It should be copied to GameField, where we can control their collision
+	 */
+	public void fire() {
+		int x, y;
+		switch (currentDir) {
+			case WEST:
+				x = getBounds().x - Bullet.HEIGHT;
+				y = getBounds().y + (getBounds().height - Bullet.WIDTH) / 2;
+				break;
+			case EAST:
+				x = getBounds().x + getBounds().width;
+				y = getBounds().y + (getBounds().height - Bullet.WIDTH) / 2;
+				break;
+			case NORTH:
+				x = getBounds().x + (getBounds().width - Bullet.WIDTH) / 2;
+				y = getBounds().y - Bullet.HEIGHT;
+				break;
+			default:
+				x = getBounds().x + (getBounds().width - Bullet.WIDTH) / 2;
+				y = getBounds().y + getBounds().height;
+				break;
+		}
+
+		bullets.add(new Bullet(x, y, currentDir));
+	}
 }

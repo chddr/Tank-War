@@ -8,10 +8,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Movable extends Sprite {
+public abstract class Movable extends Sprite {
 
 	protected BufferedImage[] directions;
 	protected int dx, dy;
+	/**
+	 * Directions images in such an order: west, east, north, south
+	 */
 	protected Direction currentDir;
 
 	public Movable(int x, int y, Direction dir) {
