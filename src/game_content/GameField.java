@@ -16,7 +16,7 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Scale (for resize)
 	 */
-	public static final int SCALE = 2;
+	public static final int SCALE = 3;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
