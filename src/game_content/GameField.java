@@ -32,7 +32,7 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Delay in miliseconds
 	 */
-	public static final int DELAY = 20;
+	public static final int DELAY = 5;
 	private Map map;
 	private Tank tank;
 
@@ -76,7 +76,6 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
-		tank.move();
 		checkCollisions();
 		//Synchronizing drawing because of buffering
 		Toolkit.getDefaultToolkit().sync();
@@ -86,7 +85,10 @@ public class GameField extends JPanel implements Runnable {
 	 * Checking collisions of tanks and other objects on the map
 	 */
 	private void checkCollisions() {
-		//TODO its empty man
+		for (MapObject mo : map)
+			if (mo.isCollidable() && tank.getTheoreticalBounds().intersects(mo.getBounds()))
+					return;
+		tank.move();
 	}
 
 	@Override
