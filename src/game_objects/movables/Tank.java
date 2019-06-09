@@ -11,15 +11,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Tank extends Sprite implements Destructible {
+public class Tank extends Movable implements Destructible {
 
 	/**
 	 * Directions images in such an order: west, east, north, south
 	 */
-	private BufferedImage[] directions;
-	private final static int SPEED = 3;
-	private int dx, dy;
-	private Direction currentDir;
+	private final static int SPEED = 2;
 
 	public Tank(int x, int y) {
 		super(x, y);
@@ -114,24 +111,5 @@ public class Tank extends Sprite implements Destructible {
 		}
 	}
 
-	/**
-	 * Method that moves the tank on the board. Should be used only when check for collision was already made.
-	 */
-	public void move() {
-		setX(dx + getX());
-		setY(dy + getY());
-	}
-
-	/**
-	 * Method we use to see if tank can move. If it theoretically moved and collided with something, we don't move;
-	 *
-	 * @return Returns bounds that tank <u><b>would have</b></u> if it moved at this moment.
-	 */
-	public Rectangle getTheoreticalBounds() {
-		Rectangle rect = getBounds();
-		rect.x += dx;
-		rect.y += dy;
-		return rect;
-	}
 
 }

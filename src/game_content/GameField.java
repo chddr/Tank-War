@@ -32,7 +32,7 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Delay in miliseconds
 	 */
-	public static final int DELAY = 5;
+	public static final int DELAY = 15;
 	private Map map;
 	private Tank tank;
 
