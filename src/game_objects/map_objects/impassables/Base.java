@@ -17,5 +17,6 @@ public class Base extends MapObject implements Destructible {
 
 	@Override
 	public void destroy() {
+		loadImage("resources/sprites/map/base_defeated.png");
 	}
 }

@@ -40,6 +40,6 @@ public class Bullet extends Movable implements Destructible {
 
 	@Override
 	public void destroy() {
-
+		setVisible(false);
 	}
 }

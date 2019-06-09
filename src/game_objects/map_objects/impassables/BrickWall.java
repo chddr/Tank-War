@@ -18,6 +18,6 @@ public class BrickWall extends MapObject implements Destructible {
 
 	@Override
 	public void destroy() {
-
+		setVisible(false);
 	}
 }
