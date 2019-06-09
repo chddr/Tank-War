@@ -2,8 +2,11 @@ package game_objects.movables;
 
 import game_objects.Sprite;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Movable extends Sprite {
 
@@ -11,16 +14,30 @@ public class Movable extends Sprite {
 	protected int dx, dy;
 	protected Direction currentDir;
 
-	public Movable(int x, int y) {
+	public Movable(int x, int y, Direction dir) {
 		super(x, y);
-
-		init();
+		currentDir = dir;
 	}
 
-	private void init() {
-
+	/**
+	 * Load images for different directions. String should be in such form: "path/image_name_%s.png", where %s is a place where direction goes
+	 * @param imageName name of an image
+	 */
+	@Override
+	protected void loadImage(String imageName) {
+		directions = new BufferedImage[4];
+		for (int i = 0; i < 4; i++) {
+			String dir = Direction.values()[i].toString().toLowerCase();
+			String str = String.format(imageName, dir);
+			try {
+				directions[i] = ImageIO.read(new File(str));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			directions[i] = scale(directions[i]);
+		}
+		image = directions[currentDir.ordinal()];
 	}
-
 
 	/**
 	 * Method that moves the object on the board. Should be used only when check for collision was already made.

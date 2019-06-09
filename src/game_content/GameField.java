@@ -58,7 +58,7 @@ public class GameField extends JPanel implements Runnable {
 	private void initMap() {
 		addKeyListener(new Adapter());
 		map = Map.getLevelMap(Level.TWO);
-		tank = new Tank(8 * BYTE, 24 * BYTE);
+		tank = new Tank(8 * BYTE, 24 * BYTE, Direction.NORTH);
 	}
 
 	/**
@@ -91,10 +91,8 @@ public class GameField extends JPanel implements Runnable {
 			if (mo.isCollidable() && tank.getTheoreticalBounds().intersects(mo.getBounds()))
 				return true;
 		}
-		if(!this.getBounds().contains(tank.getTheoreticalBounds()))
-			return true;
+		return !this.getBounds().contains(tank.getTheoreticalBounds());
 
-		return false;
 	}
 
 	@Override

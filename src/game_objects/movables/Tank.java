@@ -18,26 +18,14 @@ public class Tank extends Movable implements Destructible {
 	 */
 	private final static int SPEED = 2;
 
-	public Tank(int x, int y) {
-		super(x, y);
+	public Tank(int x, int y, Direction dir) {
+		super(x, y, dir);
 
 		init();
 	}
 
 	private void init() {
-		directions = new BufferedImage[4];
-		for (int i = 0; i < 4; i++) {
-			String dir = Direction.values()[i].toString().toLowerCase();
-			String str = String.format("resources/sprites/player_tank/tank_%s.png", dir);
-			try {
-				directions[i] = ImageIO.read(new File(str));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			directions[i] = scale(directions[i]);
-		}
-		image = directions[2];
-		currentDir = Direction.NORTH;
+		loadImage("resources/sprites/player_tank/tank_%s.png");
 		getImageDimensions();
 	}
 
