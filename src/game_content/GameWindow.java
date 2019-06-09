@@ -1,10 +1,14 @@
 package game_content;
 
+
+import javafx.scene.media.AudioClip;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -17,6 +21,12 @@ public class GameWindow extends JFrame {
 	public GameWindow() {
 
 		initUI();
+		playMusic();
+	}
+
+	private void playMusic(){
+		AudioClip note = new AudioClip(Paths.get("resources/music/test.mp3").toUri().toString());
+		note.play();
 	}
 
 	/**
