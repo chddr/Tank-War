@@ -2,7 +2,9 @@ package game_content;
 
 
 import javafx.scene.media.AudioClip;
+import map_tools.Level;
 import resources_classes.GameSound;
+import resources_classes.ScaledImage;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +15,7 @@ import javax.swing.*;
 public class GameWindow extends JFrame {
 
 	private final int windowWidth = 800;
-	private final int windowHeight = 700;
+	private final int windowHeight = 660;
 	private String fontName = "cootuecursessquare16x16";
 	private AudioClip music;
 
@@ -43,12 +45,12 @@ public class GameWindow extends JFrame {
 
 //		menuPanel.setVisible(false);
 
-		GameField field = new GameField();
+		GameField field = new GameField(Level.ONE);
 
 		setResizable(false);
 //		add(field);
 //		pack();
-		getContentPane().setBackground(Color.ORANGE);
+//		getContentPane().setBackground(Color.ORANGE);
 
 		setTitle("Tank War");
 		setWindowIcon();
@@ -79,7 +81,6 @@ public class GameWindow extends JFrame {
 		public MenuPanel(){
 			setBounds(0,0,windowWidth,windowHeight);
 			setLayout(null);
-
 			addText();
 			addPlayButton();
 			addBackground();
@@ -119,16 +120,69 @@ public class GameWindow extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					GameWindow.this.remove(MenuPanel.this);
 					music.stop();
-					GameField gameField = new GameField();
-					gameField.setBounds(0,0,624,624);
-					GameWindow.this.add(gameField);
+					GameFieldPanel gameFieldPanel = new GameFieldPanel(Level.THREE);
+					GameWindow.this.add(gameFieldPanel);
 					GameWindow.this.repaint();
-					gameField.requestFocus();
-					gameField.musicPlay();
+					gameFieldPanel.requestFocusField();
 				}
 			});
 			add(playButton);
 		}
+
+
+	}
+
+	class GameFieldPanel extends JPanel{
+
+		private GameField gameField;
+		private Level level;
+		private boolean mutedBoolean;
+		private Image mutedImage = ScaledImage.create("resources\\sprites\\menu\\buttons_icon\\mute_button.png",50,50);
+		private Image unmutedImage = ScaledImage.create("resources\\sprites\\menu\\buttons_icon\\unmute_button.png",50,50);
+
+		//Level.values()[Level.Two.ordinal()+1]
+		public GameFieldPanel(Level level){
+			setBounds(0,0,windowWidth,windowHeight);
+			setLayout(null);
+			this.level = level;
+			addGameField();
+			addMuteButton();
+		}
+
+		private void addGameField(){
+			gameField = new GameField(level);
+			gameField.setBounds(0,0,624,624);
+			add(gameField);
+			gameField.musicPlay();
+		}
+
+		private void addMuteButton(){
+
+			JButton muteButton = new JButton(new ImageIcon(unmutedImage));
+			muteButton.setBounds(700,500,50,50);
+			muteButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (mutedBoolean){
+						muteButton.setIcon(new ImageIcon(unmutedImage));
+						gameField.musicPlay();
+						mutedBoolean = false;
+						requestFocusField();
+					} else {
+						muteButton.setIcon(new ImageIcon(mutedImage));
+						gameField.musicStop();
+						mutedBoolean=true;
+						requestFocusField();
+					}
+				}
+			});
+			add(muteButton);
+		}
+
+		public void requestFocusField(){
+			gameField.requestFocus();
+		}
+
 
 
 	}

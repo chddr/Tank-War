@@ -51,27 +51,28 @@ public class GameField extends JPanel implements Runnable {
 	private Thread animator;
 
 
-	public GameField() {
-		initGameField();
+	public GameField(Level level) {
+		initGameField(level);
 	}
 
 	/**
 	 * Initialization method
 	 */
-	private void initGameField() {
+	private void initGameField(Level level) {
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(FIELD_DIMENSIONS, FIELD_DIMENSIONS));
 		setFocusable(true);
 
-		initMap();
+		initMap(level);
 
 	}
 
-	private void initMap() {
+	private void initMap(Level level) {
 		addKeyListener(new Adapter());
-		map = Map.getLevelMap(Level.TWO);
+		map = Map.getLevelMap(level);
 		tank = new Tank(8 * BYTE, 24 * BYTE, Direction.NORTH);
 	}
+
 
 	/**
 	 * Overriden method. Used to start the Thread when it's added to the JFrame
@@ -234,6 +235,10 @@ public class GameField extends JPanel implements Runnable {
 	public void musicStop(){
 		if (battleMusic!=null)
 			battleMusic.stop();
+	}
+
+	public AudioClip getBattleMusic(){
+		return battleMusic;
 	}
 
 	private class Adapter extends KeyAdapter {
