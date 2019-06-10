@@ -21,7 +21,7 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Scale (for resize)
 	 */
-	public static final int SCALE = 4;
+	public static final int SCALE = 2;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
@@ -37,7 +37,11 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Delay in miliseconds
 	 */
-	public static final int DELAY = 10;
+	public static final int DELAY = 20;
+	/**
+	 * How many frames it takes for one second to pass
+	 */
+	public static final int TENTH_OF_SECOND = 100/DELAY;
 	private List<Explosion> explosions = new LinkedList<>();
 	private Map map;
 	private Tank tank;

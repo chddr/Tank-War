@@ -10,11 +10,11 @@ import java.util.Timer;
 
 public class Tank extends Movable implements Destructible {
 
-	private final static int SPEED = 2;
+	private final static int SPEED = 1*GameField.SCALE;
 	/**
 	 * Delay between bullets (in milliseconds)
 	 */
-	private static final int DELAY = 1000;
+	private static final int DELAY = 1500;
 	private ArrayList<Bullet> bullets;
 	private long bulletTimer;
 
