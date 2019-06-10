@@ -2,15 +2,13 @@ package game_objects.movables;
 
 import game_content.GameField;
 import game_objects.Destructible;
-import javafx.scene.transform.Scale;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Timer;
 
 public class Tank extends Movable implements Destructible {
 
-	private final static int SPEED = 1*GameField.SCALE;
+	private final static int SPEED = GameField.SCALE;
 	/**
 	 * Delay between bullets (in milliseconds)
 	 */
@@ -38,15 +36,14 @@ public class Tank extends Movable implements Destructible {
 	public void changeDirection(Direction dir) {
 		//Slight move to fit the tank in the narrow corridors and other places
 		if (Direction.isTurn(currentDir, dir)) {
-			double coord;
 			switch (currentDir) {
 				case WEST:
 				case EAST:
-					setX(round(getX(),GameField.BYTE));
+					setX(round(getX()));
 					break;
 				case NORTH:
 				case SOUTH:
-					setY(round(getY(),GameField.BYTE));
+					setY(round(getY()));
 					break;
 			}
 		}
@@ -83,13 +80,14 @@ public class Tank extends Movable implements Destructible {
 			dx = 0;
 		}
 
-		if (key == KeyEvent.VK_UP|| key == KeyEvent.VK_DOWN) {
+		if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN) {
 			dy = 0;
 		}
 	}
 
 	/**
 	 * Get bullets that tank has shot
+	 *
 	 * @return bullets
 	 */
 	public ArrayList<Bullet> getBullets() {
@@ -101,8 +99,8 @@ public class Tank extends Movable implements Destructible {
 	 */
 	public void fire() {
 		long timePassed = System.currentTimeMillis() - bulletTimer;
-		int delay = bullets.isEmpty() ? DELAY/3 : DELAY;
-		if(timePassed<delay)
+		int delay = bullets.isEmpty() ? DELAY / 3 : DELAY;
+		if (timePassed < delay)
 			return;
 		int x, y;
 		switch (currentDir) {
@@ -128,9 +126,14 @@ public class Tank extends Movable implements Destructible {
 		bulletTimer = System.currentTimeMillis();
 	}
 
-	public static int round(double num, int base) {
-		num /= base;
-		num = Math.round(num) * base;
+	/**
+	 * Rounds the coordinate so it fits into the game grid
+	 * @param num needed coordinate
+	 * @return rounded coordinate
+	 */
+	static int round(double num) {
+		num /= GameField.BYTE;
+		num = Math.round(num) * GameField.BYTE;
 		return (int) num;
 	}
 }

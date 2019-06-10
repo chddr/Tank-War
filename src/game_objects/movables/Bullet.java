@@ -44,7 +44,7 @@ public class Bullet extends Movable implements Destructible {
 	@Override
 	public void destroy() {
 		setVisible(false);
-		explosion = new Explosion(Tank.round(getX()-GameField.BYTE/2, GameField.BYTE), Tank.round(getY()-GameField.BYTE/2, GameField.BYTE));
+		explosion = new Explosion(Tank.round(getX()-GameField.BYTE/2), Tank.round(getY()-GameField.BYTE/2));
 	}
 
 	public Explosion getExplosion() {
