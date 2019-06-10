@@ -1,6 +1,9 @@
 package game_content;
 
+import game_objects.Destructible;
 import game_objects.map_objects.MapObject;
+import game_objects.map_objects.turf.Explosion;
+import game_objects.movables.Bullet;
 import game_objects.movables.Direction;
 import game_objects.movables.Tank;
 import map_tools.Level;
@@ -10,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GameField extends JPanel implements Runnable {
 
@@ -32,7 +37,12 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Delay in miliseconds
 	 */
-	public static final int DELAY = 5;
+	public static final int DELAY = 20;
+	/**
+	 * How many frames it takes for one second to pass
+	 */
+	public static final int TENTH_OF_SECOND = 100/DELAY;
+	private List<Explosion> explosions = new LinkedList<>();
 	private Map map;
 	private Tank tank;
 
@@ -58,7 +68,7 @@ public class GameField extends JPanel implements Runnable {
 	private void initMap() {
 		addKeyListener(new Adapter());
 		map = Map.getLevelMap(Level.TWO);
-		tank = new Tank(8 * BYTE, 24 * BYTE);
+		tank = new Tank(8 * BYTE, 24 * BYTE, Direction.NORTH);
 	}
 
 	/**
@@ -76,25 +86,51 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
-		if(!checkWallCollisions()) {
+		if (!checkWallCollisions()) {
 			tank.move();
 		}
+		updateBullets();
+		updateMap();
 		//Synchronizing drawing because of buffering
 		Toolkit.getDefaultToolkit().sync();
+	}
+
+	private void updateMap() {
+		map.removeIf(mapObject -> !mapObject.isVisible());
+	}
+
+	private void updateBullets() {
+		List<Bullet> bullets = tank.getBullets();
+		bullets.removeIf(bullet -> !bullet.isVisible());
+
+		for (Bullet b : bullets) {
+			Rectangle bBounds = b.getBounds();
+			b.move();
+			for (MapObject mo : map) {
+				if (mo instanceof Destructible && bBounds.intersects(mo.getBounds())) {
+					((Destructible) mo).destroy();
+					b.destroy();
+					explosions.add(b.getExplosion());
+				}
+
+			}
+			if (!this.getBounds().contains(bBounds))
+				b.destroy();
+		}
+
 	}
 
 	/**
 	 * Checking collisions of tanks and other objects on the map
 	 */
 	private boolean checkWallCollisions() {
+		Rectangle tBounds = tank.getTheoreticalBounds();
 		for (MapObject mo : map) {
-			if (mo.isCollidable() && tank.getTheoreticalBounds().intersects(mo.getBounds()))
+			if (mo.isCollidable() && tBounds.intersects(mo.getBounds()))
 				return true;
 		}
-		if(!this.getBounds().contains(tank.getTheoreticalBounds()))
-			return true;
+		return !this.getBounds().contains(tBounds);
 
-		return false;
 	}
 
 	@Override
@@ -103,6 +139,22 @@ public class GameField extends JPanel implements Runnable {
 
 		drawTank(g);
 		drawMapObjects(g);
+		drawBullets(g);
+		drawExplosion(g);
+	}
+
+	/**
+	 * Draw a bullet on graphics
+	 *
+	 * @param g Graphics
+	 */
+	private void drawBullets(Graphics g) {
+		List<Bullet> bullets = tank.getBullets();
+		for (Bullet b : bullets) {
+			if (b.isVisible()) {
+				g.drawImage(b.getImage(), b.getX(), b.getY(), this);
+			}
+		}
 	}
 
 	/**
@@ -123,6 +175,16 @@ public class GameField extends JPanel implements Runnable {
 		for (MapObject mo : map)
 			if (mo.isVisible())
 				g.drawImage(mo.getImage(), mo.getX(), mo.getY(), this);
+
+	}
+
+	private void drawExplosion(Graphics g) {
+		for (Explosion ex : explosions)
+			if (ex.isVisible()) {
+				g.drawImage(ex.getImage(), ex.getX(), ex.getY(), this);
+				ex.cycle();
+			}
+		explosions.removeIf(explosion -> !explosion.isVisible());
 
 	}
 
@@ -163,6 +225,11 @@ public class GameField extends JPanel implements Runnable {
 	}
 
 	private class Adapter extends KeyAdapter {
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			tank.fire();
+		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
