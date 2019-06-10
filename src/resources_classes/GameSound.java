@@ -17,8 +17,4 @@ public class GameSound{
         return new AudioClip(Paths.get("resources/music/battle_music.mp3").toUri().toString());
     }
 
-
-
-
-
 }

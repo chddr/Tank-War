@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.file.Paths;
 import javax.swing.*;
 
 public class GameWindow extends JFrame {
@@ -51,6 +50,7 @@ public class GameWindow extends JFrame {
 //		pack();
 
 		setTitle("Tank War");
+		setWindowIcon();
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -66,9 +66,13 @@ public class GameWindow extends JFrame {
 
 	}
 
-	class MenuPanel extends JPanel{
+	private void setWindowIcon(){
+		Image iconImage =
+				Toolkit.getDefaultToolkit().createImage("resources/sprites/window/icon.png");
+		setIconImage(iconImage);
+	}
 
-//		private Image backgroundImage;
+	class MenuPanel extends JPanel{
 
 		public MenuPanel(){
 			setBounds(0,0,windowWidth,windowHeight);
