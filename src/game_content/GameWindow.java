@@ -22,13 +22,8 @@ public class GameWindow extends JFrame {
 	public GameWindow() {
 
 		initUI();
-		playMusic();
 	}
 
-	private void playMusic(){
-		music = GameSound.getMenuMusicInstance();
-		music.play();
-	}
 
 	/**
 	 * This method initialises the UI of the app.
@@ -78,6 +73,7 @@ public class GameWindow extends JFrame {
 			addPlayButton();
 			addLevelsComboBoc();
 			addBackground();
+			playMusic();
 
 		}
 
@@ -88,6 +84,11 @@ public class GameWindow extends JFrame {
 			labelBackground.setBounds(0, 0, windowWidth, windowHeight - 30);
 			add(labelBackground);
 
+		}
+
+		private void playMusic(){
+			music = GameSound.getMenuMusicInstance();
+			music.play();
 		}
 
 
@@ -178,6 +179,7 @@ public class GameWindow extends JFrame {
 			this.level = level;
 			addGameField();
 			addMuteButton();
+			addExitToMenuButton();
 		}
 
 		private void addGameField(){
@@ -190,7 +192,7 @@ public class GameWindow extends JFrame {
 		private void addMuteButton(){
 
 			JButton muteButton = new JButton(new ImageIcon(unmutedImage));
-			muteButton.setBounds(700,500,50,50);
+			muteButton.setBounds(640,540,50,50);
 			muteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -209,6 +211,21 @@ public class GameWindow extends JFrame {
 				}
 			});
 			add(muteButton);
+		}
+
+		private void addExitToMenuButton(){
+			JButton exitButton = new JButton(new ImageIcon(ScaledImage.create("resources/sprites/menu/buttons_icon/exit_button.png",50,50)));
+			exitButton.setBounds(730,540,50,50);
+			exitButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gameField.musicStop();
+					GameWindow.this.remove(GameFieldPanel.this);
+					GameWindow.this.add(new MenuPanel());
+					GameWindow.this.repaint();
+				}
+			});
+			add(exitButton);
 		}
 
 		public void requestFocusField(){
