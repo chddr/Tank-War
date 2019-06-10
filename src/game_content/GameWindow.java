@@ -35,28 +35,19 @@ public class GameWindow extends JFrame {
 	 */
 	private void initUI() {
 
+		setTitle("Tank War");
+		setWindowIcon();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
+		setResizable(false);
 		setSize(windowWidth,windowHeight);
-		createFont();
 
+		createFont();
 		MenuPanel menuPanel = new MenuPanel();
 		add(menuPanel);
 
-
-//		menuPanel.setVisible(false);
-
-//		GameField field = new GameField(Level.ONE);
-
-		setResizable(false);
-//		add(field);
-//		pack();
-//		getContentPane().setBackground(Color.ORANGE);
-
-		setTitle("Tank War");
-		setWindowIcon();
 		setLocationRelativeTo(null);
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 
@@ -78,11 +69,14 @@ public class GameWindow extends JFrame {
 
 	class MenuPanel extends JPanel{
 
+		private JComboBox levelsBox;
+		private JLabel labelBackground;
 		public MenuPanel(){
 			setBounds(0,0,windowWidth,windowHeight);
 			setLayout(null);
 			addText();
 			addPlayButton();
+			addLevelsComboBoc();
 			addBackground();
 
 		}
@@ -90,9 +84,9 @@ public class GameWindow extends JFrame {
 		private void addBackground(){
 
 			Image backgroundImage = ScaledImage.create("resources/sprites/menu/background2.gif",windowWidth,windowHeight-30);
-			JLabel label = new JLabel(new ImageIcon(backgroundImage));
-			label.setBounds(0, 0, windowWidth, windowHeight - 30);
-			add(label);
+			labelBackground = new JLabel(new ImageIcon(backgroundImage));
+			labelBackground.setBounds(0, 0, windowWidth, windowHeight - 30);
+			add(labelBackground);
 
 		}
 
@@ -107,16 +101,17 @@ public class GameWindow extends JFrame {
 
 		private void addPlayButton(){
 			JButton playButton = new JButton("Play");
-			playButton.setFont(new Font(fontName,1,60));
+			playButton.setFont(new Font(fontName,1,50));
 			playButton.setForeground(Color.BLACK);
 			playButton.setBackground(new Color(172,17,21));
-			playButton.setBounds(250,500,300,80);
+			playButton.setBounds(250,400,300,80);
 			playButton.setBorderPainted(false);
+			playButton.setVerticalAlignment(SwingConstants.BOTTOM);
 			playButton.setFocusPainted(false);
 			playButton.addActionListener(e -> {
 				GameWindow.this.remove(MenuPanel.this);
 				music.stop();
-				GameFieldPanel gameFieldPanel = new GameFieldPanel(Level.THREE);
+				GameFieldPanel gameFieldPanel = new GameFieldPanel((Level) levelsBox.getSelectedItem());
 				GameWindow.this.add(gameFieldPanel);
 				GameWindow.this.repaint();
 				gameFieldPanel.requestFocusField();
@@ -124,8 +119,49 @@ public class GameWindow extends JFrame {
 			add(playButton);
 		}
 
+		private void addLevelsComboBoc(){
+			levelsBox = new JComboBox();
+			levelsBox.setRenderer(new CustomComboBoxCellRenderer());
+			levelsBox.setFont(new Font(fontName,0,50));
+			levelsBox.setForeground(Color.BLACK);
+			levelsBox.setBackground(new Color(172,17,21));
+			levelsBox.setBounds(250,500,300,80);
+			levelsBox.setToolTipText("Choose desired level");
+			levelsBox.setMaximumRowCount(2);
+			for (Level level : Level.values()) {
+				levelsBox.addItem(level);
+			}
+			add(levelsBox);
+		}
+
+		class CustomComboBoxCellRenderer extends JLabel implements ListCellRenderer {
+
+			@Override
+			public Component getListCellRendererComponent(
+					JList list,
+					Object value,
+					int index,
+					boolean isSelected,
+					boolean cellHasFocus) {
+
+				JLabel label = new JLabel(){
+					public Dimension getPreferredSize(){
+						return new Dimension(300, 80);
+					}
+				};
+				label.setText(String.valueOf(value));
+				label.setHorizontalAlignment(SwingConstants.CENTER);
+				label.setVerticalAlignment(SwingConstants.BOTTOM);
+				label.setFont(new Font(fontName,0,50));
+				label.setForeground(Color.BLACK);
+
+				return label;
+			}
+		}
+
 
 	}
+
 
 	class GameFieldPanel extends JPanel{
 

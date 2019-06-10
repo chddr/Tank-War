@@ -53,6 +53,7 @@ public class GameField extends JPanel implements Runnable {
 
 
 	public GameField(Level level, GameWindow.GameFieldPanel gameFieldPanel) {
+		this.gameFieldPanel = gameFieldPanel;
 		initGameField(level);
 	}
 
@@ -63,9 +64,8 @@ public class GameField extends JPanel implements Runnable {
 		setBackground(Color.BLACK);
 		setPreferredSize(new Dimension(FIELD_DIMENSIONS, FIELD_DIMENSIONS));
 		setFocusable(true);
-
-		this.gameFieldPanel = gameFieldPanel;
 		initMap(level);
+		gameFieldPanel.gameWon();
 
 	}
 
