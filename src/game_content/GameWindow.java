@@ -16,7 +16,7 @@ public class GameWindow extends JFrame {
 
 	private final int windowWidth = 800;
 	private final int windowHeight = 660;
-	private String fontName = "cootuecursessquare16x16";
+	private final String fontName = "cootuecursessquare16x16";
 	private AudioClip music;
 
 	public GameWindow() {
@@ -137,8 +137,8 @@ public class GameWindow extends JFrame {
 		private GameField gameField;
 		private Level level;
 		private boolean mutedBoolean;
-		private Image mutedImage = ScaledImage.create("resources\\sprites\\menu\\buttons_icon\\mute_button.png",50,50);
-		private Image unmutedImage = ScaledImage.create("resources\\sprites\\menu\\buttons_icon\\unmute_button.png",50,50);
+		private Image mutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/mute_button.png",50,50);
+		private Image unmutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/unmute_button.png",50,50);
 
 		//Level.values()[Level.Two.ordinal()+1]
 		public GameFieldPanel(Level level){
@@ -170,6 +170,7 @@ public class GameWindow extends JFrame {
 						requestFocusField();
 					} else {
 						muteButton.setIcon(new ImageIcon(mutedImage));
+						//Jazz music stops.jpg
 						gameField.musicStop();
 						mutedBoolean=true;
 						requestFocusField();
@@ -188,6 +189,10 @@ public class GameWindow extends JFrame {
 		}
 
 		public void gameLost(){
+
+		}
+
+		public void tankHpLost(){
 
 		}
 
