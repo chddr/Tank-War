@@ -104,8 +104,7 @@ public class GameField extends JPanel implements Runnable {
 		bullets.removeIf(bullet -> !bullet.isVisible());
 
 		for (Bullet b : bullets) {
-			Rectangle bBounds = b.getBounds();
-			b.move();
+			Rectangle bBounds = b.getTheoreticalBounds();
 			for (MapObject mo : map) {
 				if (mo instanceof Destructible && bBounds.intersects(mo.getBounds())) {
 					((Destructible) mo).destroy();
@@ -116,6 +115,7 @@ public class GameField extends JPanel implements Runnable {
 			}
 			if (!this.getBounds().contains(bBounds))
 				b.destroy();
+			b.move();
 		}
 
 	}

@@ -105,20 +105,20 @@ public class Tank extends Movable implements Destructible {
 		int x, y;
 		switch (currentDir) {
 			case WEST:
-				x = getBounds().x - Bullet.HEIGHT;
-				y = getBounds().y + (getBounds().height - Bullet.WIDTH) / 2;
+				x = getX() - Bullet.HEIGHT;
+				y = getY() + (getHeight() - Bullet.WIDTH) / 2;
 				break;
 			case EAST:
-				x = getBounds().x + getBounds().width;
-				y = getBounds().y + (getBounds().height - Bullet.WIDTH) / 2;
+				x = getX() + getWidth();
+				y = getY() + (getHeight() - Bullet.WIDTH) / 2;
 				break;
 			case NORTH:
-				x = getBounds().x + (getBounds().width - Bullet.WIDTH) / 2;
-				y = getBounds().y - Bullet.HEIGHT;
+				x = getX() + (getWidth() - Bullet.WIDTH) / 2;
+				y = getY() - Bullet.HEIGHT;
 				break;
 			default:
-				x = getBounds().x + (getBounds().width - Bullet.WIDTH) / 2;
-				y = getBounds().y + getBounds().height;
+				x = getX() + (getWidth() - Bullet.WIDTH) / 2;
+				y = getY() + getHeight();
 				break;
 		}
 
