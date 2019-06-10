@@ -39,9 +39,9 @@ public class GameField extends JPanel implements Runnable {
 	 */
 	public static final int DELAY = 20;
 	/**
-	 * How many frames it takes for one second to pass
+	 * How many frames it takes for tenth second to pass
 	 */
-	public static final int TENTH_OF_SECOND = 100/DELAY;
+	public static final int TENTH_OF_SECOND = 100 / DELAY;
 	private List<Explosion> explosions = new LinkedList<>();
 	private Map map;
 	private Tank tank;
@@ -104,8 +104,7 @@ public class GameField extends JPanel implements Runnable {
 		bullets.removeIf(bullet -> !bullet.isVisible());
 
 		for (Bullet b : bullets) {
-			Rectangle bBounds = b.getBounds();
-			b.move();
+			Rectangle bBounds = b.getTheoreticalBounds();
 			for (MapObject mo : map) {
 				if (mo instanceof Destructible && bBounds.intersects(mo.getBounds())) {
 					((Destructible) mo).destroy();
@@ -116,6 +115,7 @@ public class GameField extends JPanel implements Runnable {
 			}
 			if (!this.getBounds().contains(bBounds))
 				b.destroy();
+			b.move();
 		}
 
 	}
@@ -144,9 +144,9 @@ public class GameField extends JPanel implements Runnable {
 	}
 
 	/**
-	 * Draw a bullet on graphics
+	 * Draw bullets on graphics
 	 *
-	 * @param g Graphics
+	 * @param g Graphics we draw on
 	 */
 	private void drawBullets(Graphics g) {
 		List<Bullet> bullets = tank.getBullets();
@@ -158,18 +158,18 @@ public class GameField extends JPanel implements Runnable {
 	}
 
 	/**
-	 * Draw a tank on the specified graphics
+	 * Draw player tank on graphics
 	 *
-	 * @param g Graphics to draw on
+	 * @param g Graphics we draw on
 	 */
 	private void drawTank(Graphics g) {
 		g.drawImage(tank.getImage(), tank.getX(), tank.getY(), this);
 	}
 
 	/**
-	 * Draw all objects that are on the map
+	 * Draw all objects that are on the map on graphics
 	 *
-	 * @param g Graphics that we draw on
+	 * @param g Graphics we draw on
 	 */
 	private void drawMapObjects(Graphics g) {
 		for (MapObject mo : map)
@@ -178,6 +178,11 @@ public class GameField extends JPanel implements Runnable {
 
 	}
 
+	/**
+	 * Draw explosions on graphics
+	 *
+	 * @param g Graphics we draw on
+	 */
 	private void drawExplosion(Graphics g) {
 		for (Explosion ex : explosions)
 			if (ex.isVisible()) {
@@ -191,6 +196,7 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Method for running the game in a thread for continuous and uninterrupted game performance. We use a while-loop to perform some actions specified in a cycle method and then repaint the whole game.
 	 */
+	@SuppressWarnings("InfiniteLoopStatement")
 	@Override
 	public void run() {
 
