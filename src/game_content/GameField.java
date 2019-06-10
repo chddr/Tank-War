@@ -3,8 +3,10 @@ package game_content;
 import game_objects.map_objects.MapObject;
 import game_objects.movables.Direction;
 import game_objects.movables.Tank;
+import javafx.scene.media.AudioClip;
 import map_tools.Level;
 import map_tools.Map;
+import resources_classes.GameSound;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +37,7 @@ public class GameField extends JPanel implements Runnable {
 	public static final int DELAY = 5;
 	private Map map;
 	private Tank tank;
-
+	private AudioClip battleMusic;
 	private Thread animator;
 
 
@@ -154,6 +156,16 @@ public class GameField extends JPanel implements Runnable {
 
 			beforeTime = System.currentTimeMillis();
 		}
+	}
+
+	public void musicPlay(){
+		battleMusic = GameSound.getBattleMusicInstance();
+		battleMusic.play();
+	}
+
+	public void musicStop(){
+		if (battleMusic!=null)
+			battleMusic.stop();
 	}
 
 	private class Adapter extends KeyAdapter {

@@ -2,14 +2,13 @@ package game_content;
 
 
 import javafx.scene.media.AudioClip;
+import resources_classes.GameSound;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Paths;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class GameWindow extends JFrame {
@@ -17,6 +16,7 @@ public class GameWindow extends JFrame {
 	private final int windowWidth = 800;
 	private final int windowHeight = 700;
 	private String fontName = "cootuecursessquare16x16";
+	private AudioClip music;
 
 	public GameWindow() {
 
@@ -25,8 +25,8 @@ public class GameWindow extends JFrame {
 	}
 
 	private void playMusic(){
-		AudioClip note = new AudioClip(Paths.get("resources/music/test.mp3").toUri().toString());
-		note.play();
+		music = GameSound.getMenuMusicInstance();
+		music.play();
 	}
 
 	/**
@@ -112,43 +112,23 @@ public class GameWindow extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					GameWindow.this.remove(MenuPanel.this);
+					music.stop();
 					GameField gameField = new GameField();
 					gameField.setBounds(10,10,650,650);
 					GameWindow.this.add(gameField);
 					GameWindow.this.repaint();
 					gameField.requestFocus();
+					gameField.musicPlay();
 				}
 			});
 			add(playButton);
 		}
 
 
-//		class BackgroundGifPanel extends JPanel{
-//
-//			private Image backgroundImage =
-//					Toolkit.getDefaultToolkit().createImage("C:\\Users\\Ein Erste\\Desktop\\Пикчи\\Лучше обои\\270916.png");
-////					Toolkit.getDefaultToolkit().createImage("resources/sprites/menu/background2.gif");
-//			private int counter;
-//
-//
-//			@Override
-//			public void paint(Graphics g) {
-////				counter++;
-////				if (counter>5050)
-////					return;
-////				super.paint(g);
-//				if (backgroundImage!=null){
-//					g.drawImage(backgroundImage, 0, 0, windowWidth, windowHeight - 30, this);
-//					System.out.println(1);
-//
-//				}
-//			}
-//		}
 	}
 
 	public static void main(String[] args) {
-//		JFrame ex = new GameWindow();
-//		ex.setVisible(true);
+
 		EventQueue.invokeLater(() -> {
 			JFrame ex = new GameWindow();
 			ex.setVisible(true);
