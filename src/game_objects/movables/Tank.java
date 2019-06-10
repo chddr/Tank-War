@@ -106,7 +106,9 @@ public class Tank extends Movable implements Destructible {
 	 * Tank fires a bullet. It should be copied to GameField, where we can control their collision
 	 */
 	public void fire() {
-		if(System.currentTimeMillis()-bulletTimer<DELAY && !bullets.isEmpty())
+		long timePassed = System.currentTimeMillis() - bulletTimer;
+		int delay = bullets.isEmpty() ? DELAY/3 : DELAY;
+		if(timePassed<delay)
 			return;
 		int x, y;
 		switch (currentDir) {

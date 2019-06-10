@@ -21,7 +21,7 @@ public class Explosion extends Sprite {
 	}
 
 	public void cycle() {
-		if(i== DELAY *1) {
+		if(i== DELAY ) {
 			loadImage("resources/sprites/map/explosion2.png");
 		} else if(i== DELAY *2) {
 			loadImage("resources/sprites/map/explosion3.png");

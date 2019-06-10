@@ -6,7 +6,7 @@ import game_objects.map_objects.turf.Explosion;
 
 public class Bullet extends Movable implements Destructible {
 
-	private final static int SPEED = 5;
+	private final static int SPEED = 5*GameField.SCALE;
 	public final static int WIDTH = 3 * GameField.SCALE;
 	public final static int HEIGHT = 4 * GameField.SCALE;
 
