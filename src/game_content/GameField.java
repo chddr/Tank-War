@@ -2,10 +2,11 @@ package game_content;
 
 import game_objects.Destructible;
 import game_objects.map_objects.MapObject;
+import game_objects.map_objects.impassables.Base;
 import game_objects.map_objects.turf.Explosion;
 import game_objects.movables.Bullet;
 import game_objects.movables.Direction;
-import game_objects.movables.Tank;
+import game_objects.movables.PlayerTank;
 import javafx.scene.media.AudioClip;
 import map_tools.Level;
 import map_tools.Map;
@@ -45,14 +46,16 @@ public class GameField extends JPanel implements Runnable {
 	 */
 	public static final int TENTH_OF_SECOND = 100 / DELAY;
 	private List<Explosion> explosions = new LinkedList<>();
+	private Base base;
 	private Map map;
-	private Tank tank;
+	private PlayerTank playerTank;
 	private AudioClip battleMusic;
 	private Thread animator;
 	private GameWindow.GameFieldPanel gameFieldPanel;
 
 
 	public GameField(Level level, GameWindow.GameFieldPanel gameFieldPanel) {
+		this.gameFieldPanel = gameFieldPanel;
 		initGameField(level);
 	}
 
@@ -64,7 +67,6 @@ public class GameField extends JPanel implements Runnable {
 		setPreferredSize(new Dimension(FIELD_DIMENSIONS, FIELD_DIMENSIONS));
 		setFocusable(true);
 
-		this.gameFieldPanel = gameFieldPanel;
 		initMap(level);
 
 	}
@@ -72,7 +74,8 @@ public class GameField extends JPanel implements Runnable {
 	private void initMap(Level level) {
 		addKeyListener(new Adapter());
 		map = Map.getLevelMap(level);
-		tank = new Tank(8 * BYTE, 24 * BYTE, Direction.NORTH);
+		base = map.getBase();
+		playerTank = new PlayerTank(8 * BYTE, 24 * BYTE, Direction.NORTH);
 	}
 
 
@@ -91,8 +94,9 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
+		checkWinCondtions();
 		if (!checkWallCollisions()) {
-			tank.move();
+			playerTank.move();
 		}
 		updateBullets();
 		updateMap();
@@ -100,12 +104,18 @@ public class GameField extends JPanel implements Runnable {
 		Toolkit.getDefaultToolkit().sync();
 	}
 
+	private void checkWinCondtions() {
+		if(base.isDefeated()){
+			gameFieldPanel.gameLost();
+		}
+	}
+
 	private void updateMap() {
 		map.removeIf(mapObject -> !mapObject.isVisible());
 	}
 
 	private void updateBullets() {
-		List<Bullet> bullets = tank.getBullets();
+		List<Bullet> bullets = playerTank.getBullets();
 		bullets.removeIf(bullet -> !bullet.isVisible());
 
 		for (Bullet b : bullets) {
@@ -129,7 +139,7 @@ public class GameField extends JPanel implements Runnable {
 	 * Checking collisions of tanks and other objects on the map
 	 */
 	private boolean checkWallCollisions() {
-		Rectangle tBounds = tank.getTheoreticalBounds();
+		Rectangle tBounds = playerTank.getTheoreticalBounds();
 		for (MapObject mo : map) {
 			if (mo.isCollidable() && tBounds.intersects(mo.getBounds()))
 				return true;
@@ -154,7 +164,7 @@ public class GameField extends JPanel implements Runnable {
 	 * @param g Graphics we draw on
 	 */
 	private void drawBullets(Graphics g) {
-		List<Bullet> bullets = tank.getBullets();
+		List<Bullet> bullets = playerTank.getBullets();
 		for (Bullet b : bullets) {
 			if (b.isVisible()) {
 				g.drawImage(b.getImage(), b.getX(), b.getY(), this);
@@ -168,7 +178,7 @@ public class GameField extends JPanel implements Runnable {
 	 * @param g Graphics we draw on
 	 */
 	private void drawTank(Graphics g) {
-		g.drawImage(tank.getImage(), tank.getX(), tank.getY(), this);
+		g.drawImage(playerTank.getImage(), playerTank.getX(), playerTank.getY(), this);
 	}
 
 	/**
@@ -253,7 +263,7 @@ public class GameField extends JPanel implements Runnable {
 
 		@Override
 		public void keyTyped(KeyEvent e) {
-			tank.fire();
+			playerTank.fire();
 		}
 
 		@Override
@@ -262,23 +272,23 @@ public class GameField extends JPanel implements Runnable {
 
 			switch (key) {
 				case KeyEvent.VK_LEFT:
-					tank.changeDirection(Direction.WEST);
+					playerTank.changeDirection(Direction.WEST);
 					break;
 				case KeyEvent.VK_RIGHT:
-					tank.changeDirection(Direction.EAST);
+					playerTank.changeDirection(Direction.EAST);
 					break;
 				case KeyEvent.VK_UP:
-					tank.changeDirection(Direction.NORTH);
+					playerTank.changeDirection(Direction.NORTH);
 					break;
 				case KeyEvent.VK_DOWN:
-					tank.changeDirection(Direction.SOUTH);
+					playerTank.changeDirection(Direction.SOUTH);
 					break;
 			}
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			tank.keyReleased(e);
+			playerTank.keyReleased(e);
 		}
 	}
 }
