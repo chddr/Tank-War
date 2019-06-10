@@ -2,14 +2,21 @@ package game_objects.movables;
 
 import game_content.GameField;
 import game_objects.Destructible;
+import javafx.scene.transform.Scale;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class Tank extends Movable implements Destructible {
 
 	private final static int SPEED = 2;
+	/**
+	 * Delay between bullets (in milliseconds)
+	 */
+	private static final int DELAY = 1000;
 	private ArrayList<Bullet> bullets;
+	private long bulletTimer;
 
 	public Tank(int x, int y, Direction dir) {
 		super(x, y, dir);
@@ -37,17 +44,11 @@ public class Tank extends Movable implements Destructible {
 			switch (currentDir) {
 				case WEST:
 				case EAST:
-					coord = getX();
-					coord /= GameField.BYTE;
-					coord = Math.round(coord) * GameField.BYTE;
-					setX((int) coord);
+					setX(round(getX(),GameField.BYTE));
 					break;
 				case NORTH:
 				case SOUTH:
-					coord = getY();
-					coord /= GameField.BYTE;
-					coord = Math.round(coord) * GameField.BYTE;
-					setY((int) coord);
+					setY(round(getY(),GameField.BYTE));
 					break;
 			}
 		}
@@ -105,6 +106,8 @@ public class Tank extends Movable implements Destructible {
 	 * Tank fires a bullet. It should be copied to GameField, where we can control their collision
 	 */
 	public void fire() {
+		if(System.currentTimeMillis()-bulletTimer<DELAY && !bullets.isEmpty())
+			return;
 		int x, y;
 		switch (currentDir) {
 			case WEST:
@@ -126,5 +129,12 @@ public class Tank extends Movable implements Destructible {
 		}
 
 		bullets.add(new Bullet(x, y, currentDir));
+		bulletTimer = System.currentTimeMillis();
+	}
+
+	public static int round(double num, int base) {
+		num /= base;
+		num = Math.round(num) * base;
+		return (int) num;
 	}
 }

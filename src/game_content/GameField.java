@@ -1,6 +1,8 @@
 package game_content;
 
+import game_objects.Destructible;
 import game_objects.map_objects.MapObject;
+import game_objects.map_objects.turf.Explosion;
 import game_objects.movables.Bullet;
 import game_objects.movables.Direction;
 import game_objects.movables.Tank;
@@ -11,14 +13,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GameField extends JPanel implements Runnable {
 
 	/**
 	 * Scale (for resize)
 	 */
-	public static final int SCALE = 2;
+	public static final int SCALE = 4;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
@@ -34,9 +37,9 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Delay in miliseconds
 	 */
-	public static final int DELAY = 15;
+	public static final int DELAY = 10;
+	private List<Explosion> explosions = new LinkedList<>();
 	private Map map;
-	private ArrayList<Bullet> bullets;
 	private Tank tank;
 
 	private Thread animator;
@@ -62,7 +65,6 @@ public class GameField extends JPanel implements Runnable {
 		addKeyListener(new Adapter());
 		map = Map.getLevelMap(Level.TWO);
 		tank = new Tank(8 * BYTE, 24 * BYTE, Direction.NORTH);
-		bullets = new ArrayList<>();
 	}
 
 	/**
@@ -83,26 +85,47 @@ public class GameField extends JPanel implements Runnable {
 		if (!checkWallCollisions()) {
 			tank.move();
 		}
-		moveBullets();
+		updateBullets();
+		updateMap();
 		//Synchronizing drawing because of buffering
 		Toolkit.getDefaultToolkit().sync();
 	}
 
-	private void moveBullets() {
+	private void updateMap() {
+		map.removeIf(mapObject -> !mapObject.isVisible());
+	}
+
+	private void updateBullets() {
+		List<Bullet> bullets = tank.getBullets();
+		bullets.removeIf(bullet -> !bullet.isVisible());
+
 		for (Bullet b : bullets) {
-				b.move();
+			Rectangle bBounds = b.getBounds();
+			b.move();
+			for (MapObject mo : map) {
+				if (mo instanceof Destructible && bBounds.intersects(mo.getBounds())) {
+					((Destructible) mo).destroy();
+					b.destroy();
+					explosions.add(b.getExplosion());
+				}
+
+			}
+			if (!this.getBounds().contains(bBounds))
+				b.destroy();
 		}
+
 	}
 
 	/**
 	 * Checking collisions of tanks and other objects on the map
 	 */
 	private boolean checkWallCollisions() {
+		Rectangle tBounds = tank.getTheoreticalBounds();
 		for (MapObject mo : map) {
-			if (mo.isCollidable() && tank.getTheoreticalBounds().intersects(mo.getBounds()))
+			if (mo.isCollidable() && tBounds.intersects(mo.getBounds()))
 				return true;
 		}
-		return !this.getBounds().contains(tank.getTheoreticalBounds());
+		return !this.getBounds().contains(tBounds);
 
 	}
 
@@ -113,6 +136,7 @@ public class GameField extends JPanel implements Runnable {
 		drawTank(g);
 		drawMapObjects(g);
 		drawBullets(g);
+		drawExplosion(g);
 	}
 
 	/**
@@ -121,9 +145,9 @@ public class GameField extends JPanel implements Runnable {
 	 * @param g Graphics
 	 */
 	private void drawBullets(Graphics g) {
-		bullets = tank.getBullets();
+		List<Bullet> bullets = tank.getBullets();
 		for (Bullet b : bullets) {
-			if (b!= null && b.isVisible()) {
+			if (b.isVisible()) {
 				g.drawImage(b.getImage(), b.getX(), b.getY(), this);
 			}
 		}
@@ -147,6 +171,16 @@ public class GameField extends JPanel implements Runnable {
 		for (MapObject mo : map)
 			if (mo.isVisible())
 				g.drawImage(mo.getImage(), mo.getX(), mo.getY(), this);
+
+	}
+
+	private void drawExplosion(Graphics g) {
+		for (Explosion ex : explosions)
+			if (ex.isVisible()) {
+				g.drawImage(ex.getImage(), ex.getX(), ex.getY(), this);
+				ex.cycle();
+			}
+		explosions.removeIf(explosion -> !explosion.isVisible());
 
 	}
 
@@ -189,6 +223,11 @@ public class GameField extends JPanel implements Runnable {
 	private class Adapter extends KeyAdapter {
 
 		@Override
+		public void keyTyped(KeyEvent e) {
+			tank.fire();
+		}
+
+		@Override
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
 
@@ -205,8 +244,6 @@ public class GameField extends JPanel implements Runnable {
 				case KeyEvent.VK_DOWN:
 					tank.changeDirection(Direction.SOUTH);
 					break;
-				case KeyEvent.VK_SPACE:
-					tank.fire();
 			}
 		}
 
