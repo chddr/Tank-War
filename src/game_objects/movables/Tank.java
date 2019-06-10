@@ -36,8 +36,6 @@ public class Tank extends Movable implements Destructible {
 	}
 
 	public void changeDirection(Direction dir) {
-		dx = 0;
-		dy = 0;
 		//Slight move to fit the tank in the narrow corridors and other places
 		if (Direction.isTurn(currentDir, dir)) {
 			double coord;
@@ -58,18 +56,22 @@ public class Tank extends Movable implements Destructible {
 			case WEST:
 				image = directions[0];
 				dx = -SPEED;
+				dy = 0;
 				break;
 			case EAST:
 				image = directions[1];
 				dx = SPEED;
+				dy = 0;
 				break;
 			case NORTH:
 				image = directions[2];
 				dy = -SPEED;
+				dx = 0;
 				break;
 			case SOUTH:
 				image = directions[3];
 				dy = SPEED;
+				dx = 0;
 				break;
 		}
 	}
@@ -77,19 +79,11 @@ public class Tank extends Movable implements Destructible {
 	public void keyReleased(KeyEvent e) {
 		int key = e.getKeyCode();
 
-		if (key == KeyEvent.VK_LEFT) {
+		if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
 			dx = 0;
 		}
 
-		if (key == KeyEvent.VK_RIGHT) {
-			dx = 0;
-		}
-
-		if (key == KeyEvent.VK_UP) {
-			dy = 0;
-		}
-
-		if (key == KeyEvent.VK_DOWN) {
+		if (key == KeyEvent.VK_UP|| key == KeyEvent.VK_DOWN) {
 			dy = 0;
 		}
 	}
