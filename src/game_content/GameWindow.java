@@ -33,7 +33,7 @@ public class GameWindow extends JFrame {
 	 */
 	private void initUI() {
 
-//		setLayout(null);
+		setLayout(null);
 		setSize(windowWidth,windowHeight);
 		createFont();
 
@@ -48,10 +48,12 @@ public class GameWindow extends JFrame {
 		setResizable(false);
 //		add(field);
 //		pack();
+		getContentPane().setBackground(Color.ORANGE);
 
 		setTitle("Tank War");
 		setWindowIcon();
 		setLocationRelativeTo(null);
+		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}

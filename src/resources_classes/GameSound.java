@@ -9,12 +9,16 @@ public class GameSound{
         return new AudioClip(Paths.get("resources/music/menu_music.mp3").toUri().toString());
     }
 
-    public static AudioClip getStopTimeSoundInstance(){
-        return new AudioClip(Paths.get("resources/music/ZA_WARUDO.mp3").toUri().toString());
-    }
-
     public static AudioClip getBattleMusicInstance(){
         return new AudioClip(Paths.get("resources/music/battle_music.mp3").toUri().toString());
+    }
+
+    public static AudioClip getStopTimeSoundInstance(){
+        return new AudioClip(Paths.get("resources/music/sounds/ZA_WARUDO.mp3").toUri().toString());
+    }
+
+    public static AudioClip getExplosionSoundInstance(){
+        return new AudioClip(Paths.get("resources/music/sounds/explosion.wav").toUri().toString());
     }
 
 }
