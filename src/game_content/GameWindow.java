@@ -16,7 +16,7 @@ public class GameWindow extends JFrame {
 
 	private final int windowWidth = 800;
 	private final int windowHeight = 660;
-	private String fontName = "cootuecursessquare16x16";
+	private final String fontName = "cootuecursessquare16x16";
 	private AudioClip music;
 
 	public GameWindow() {
@@ -88,10 +88,9 @@ public class GameWindow extends JFrame {
 		}
 
 		private void addBackground(){
-			Image backgroundImage =
-					Toolkit.getDefaultToolkit().createImage("resources/sprites/menu/background2.gif");
-			Image scaledImage = backgroundImage.getScaledInstance(windowWidth,windowHeight-30,Image.SCALE_DEFAULT);
-			JLabel label = new JLabel(new ImageIcon(scaledImage));
+
+			Image backgroundImage = ScaledImage.create("resources/sprites/menu/background2.gif",windowWidth,windowHeight-30);
+			JLabel label = new JLabel(new ImageIcon(backgroundImage));
 			label.setBounds(0, 0, windowWidth, windowHeight - 30);
 			add(label);
 
@@ -102,7 +101,6 @@ public class GameWindow extends JFrame {
 			JLabel gameName = new JLabel("<html><div style='text-align: center;'>Tank<br>War</div></html>");
 			gameName.setFont(new Font(fontName,1,100));
 			gameName.setForeground(new Color(172,17,21));
-
 			gameName.setBounds(200,-100,600,500);
 			add(gameName);
 		}
@@ -115,16 +113,13 @@ public class GameWindow extends JFrame {
 			playButton.setBounds(250,500,300,80);
 			playButton.setBorderPainted(false);
 			playButton.setFocusPainted(false);
-			playButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					GameWindow.this.remove(MenuPanel.this);
-					music.stop();
-					GameFieldPanel gameFieldPanel = new GameFieldPanel(Level.THREE);
-					GameWindow.this.add(gameFieldPanel);
-					GameWindow.this.repaint();
-					gameFieldPanel.requestFocusField();
-				}
+			playButton.addActionListener(e -> {
+				GameWindow.this.remove(MenuPanel.this);
+				music.stop();
+				GameFieldPanel gameFieldPanel = new GameFieldPanel(Level.THREE);
+				GameWindow.this.add(gameFieldPanel);
+				GameWindow.this.repaint();
+				gameFieldPanel.requestFocusField();
 			});
 			add(playButton);
 		}
@@ -137,8 +132,8 @@ public class GameWindow extends JFrame {
 		private GameField gameField;
 		private Level level;
 		private boolean mutedBoolean;
-		private Image mutedImage = ScaledImage.create("resources\\sprites\\menu\\buttons_icon\\mute_button.png",50,50);
-		private Image unmutedImage = ScaledImage.create("resources\\sprites\\menu\\buttons_icon\\unmute_button.png",50,50);
+		private Image mutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/mute_button.png",50,50);
+		private Image unmutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/unmute_button.png",50,50);
 
 		//Level.values()[Level.Two.ordinal()+1]
 		public GameFieldPanel(Level level){
@@ -170,6 +165,7 @@ public class GameWindow extends JFrame {
 						requestFocusField();
 					} else {
 						muteButton.setIcon(new ImageIcon(mutedImage));
+						//Jazz music stops.jpg
 						gameField.musicStop();
 						mutedBoolean=true;
 						requestFocusField();
@@ -188,6 +184,10 @@ public class GameWindow extends JFrame {
 		}
 
 		public void gameLost(){
+
+		}
+
+		public void tankHpLost(){
 
 		}
 
