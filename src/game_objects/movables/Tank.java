@@ -2,45 +2,31 @@ package game_objects.movables;
 
 import game_content.GameField;
 import game_objects.Destructible;
-import game_objects.Sprite;
+import javafx.scene.transform.Scale;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Timer;
 
-public class Tank extends Sprite implements Destructible {
+public class Tank extends Movable implements Destructible {
 
+	private final static int SPEED = 1*GameField.SCALE;
 	/**
-	 * Directions images in such an order: west, east, north, south
+	 * Delay between bullets (in milliseconds)
 	 */
-	private BufferedImage[] directions;
-	private final static int SPEED = 3;
-	private int dx, dy;
-	private Direction currentDir;
+	private static final int DELAY = 1500;
+	private ArrayList<Bullet> bullets;
+	private long bulletTimer;
 
-	public Tank(int x, int y) {
-		super(x, y);
+	public Tank(int x, int y, Direction dir) {
+		super(x, y, dir);
 
 		init();
 	}
 
 	private void init() {
-		directions = new BufferedImage[4];
-		for (int i = 0; i < 4; i++) {
-			String dir = Direction.values()[i].toString().toLowerCase();
-			String str = String.format("resources/sprites/player_tank/tank_%s.png", dir);
-			try {
-				directions[i] = ImageIO.read(new File(str));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			directions[i] = scale(directions[i]);
-		}
-		image = directions[2];
-		currentDir = Direction.NORTH;
+		bullets = new ArrayList<>();
+		loadImage("resources/sprites/player_tank/tank_%s.png");
 		getImageDimensions();
 	}
 
@@ -58,17 +44,11 @@ public class Tank extends Sprite implements Destructible {
 			switch (currentDir) {
 				case WEST:
 				case EAST:
-					coord = getX();
-					coord /= GameField.BYTE;
-					coord = Math.round(coord) * GameField.BYTE;
-					setX((int) coord);
+					setX(round(getX(),GameField.BYTE));
 					break;
 				case NORTH:
 				case SOUTH:
-					coord = getY();
-					coord /= GameField.BYTE;
-					coord = Math.round(coord) * GameField.BYTE;
-					setY((int) coord);
+					setY(round(getY(),GameField.BYTE));
 					break;
 			}
 		}
@@ -115,23 +95,46 @@ public class Tank extends Sprite implements Destructible {
 	}
 
 	/**
-	 * Method that moves the tank on the board. Should be used only when check for collision was already made.
+	 * Get bullets that tank has shot
+	 * @return bullets
 	 */
-	public void move() {
-		setX(dx + getX());
-		setY(dy + getY());
+	public ArrayList<Bullet> getBullets() {
+		return bullets;
 	}
 
 	/**
-	 * Method we use to see if tank can move. If it theoretically moved and collided with something, we don't move;
-	 *
-	 * @return Returns bounds that tank <u><b>would have</b></u> if it moved at this moment.
+	 * Tank fires a bullet. It should be copied to GameField, where we can control their collision
 	 */
-	public Rectangle getTheoreticalBounds() {
-		Rectangle rect = getBounds();
-		rect.x += dx;
-		rect.y += dy;
-		return rect;
+	public void fire() {
+		if(System.currentTimeMillis()-bulletTimer<DELAY && !bullets.isEmpty())
+			return;
+		int x, y;
+		switch (currentDir) {
+			case WEST:
+				x = getBounds().x - Bullet.HEIGHT;
+				y = getBounds().y + (getBounds().height - Bullet.WIDTH) / 2;
+				break;
+			case EAST:
+				x = getBounds().x + getBounds().width;
+				y = getBounds().y + (getBounds().height - Bullet.WIDTH) / 2;
+				break;
+			case NORTH:
+				x = getBounds().x + (getBounds().width - Bullet.WIDTH) / 2;
+				y = getBounds().y - Bullet.HEIGHT;
+				break;
+			default:
+				x = getBounds().x + (getBounds().width - Bullet.WIDTH) / 2;
+				y = getBounds().y + getBounds().height;
+				break;
+		}
+
+		bullets.add(new Bullet(x, y, currentDir));
+		bulletTimer = System.currentTimeMillis();
 	}
 
+	public static int round(double num, int base) {
+		num /= base;
+		num = Math.round(num) * base;
+		return (int) num;
+	}
 }

@@ -28,6 +28,10 @@ public class Sprite {
 		height = image.getHeight(null);
 	}
 
+	/**
+	 * Load image that will serve as a sprite
+	 * @param imageName name of an image
+	 */
 	protected void loadImage(String imageName) {
 		try {
 			image = ImageIO.read(new File(imageName));
@@ -39,11 +43,10 @@ public class Sprite {
 
 	/**
 	 * scale image
-	 *
 	 * @param sbi image to scale
 	 * @return scaled image
 	 */
-	public static BufferedImage scale(BufferedImage sbi) {
+	protected static BufferedImage scale(BufferedImage sbi) {
 		int sc = GameField.SCALE;
 		BufferedImage dbi = null;
 		if (sbi != null) {
