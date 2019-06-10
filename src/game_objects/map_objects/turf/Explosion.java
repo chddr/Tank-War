@@ -24,7 +24,7 @@ public class Explosion extends Sprite {
 
 	public void cycle() {
 		AudioClip explosionSound = GameSound.getExplosionSoundInstance();
-		if(i== DELAY *1) {
+		if(i == DELAY ) {
 			loadImage("resources/sprites/map/explosion2.png");
 			explosionSound.play();
 		} else if(i== DELAY *2) {

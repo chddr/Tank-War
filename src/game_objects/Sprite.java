@@ -30,6 +30,7 @@ public class Sprite {
 
 	/**
 	 * Load image that will serve as a sprite
+	 *
 	 * @param imageName name of an image
 	 */
 	protected void loadImage(String imageName) {
@@ -43,6 +44,7 @@ public class Sprite {
 
 	/**
 	 * scale image
+	 *
 	 * @param sbi image to scale
 	 * @return scaled image
 	 */
@@ -68,6 +70,14 @@ public class Sprite {
 
 	public int getY() {
 		return y;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 
 	protected void setX(int x) {

@@ -2,15 +2,13 @@ package game_objects.movables;
 
 import game_content.GameField;
 import game_objects.Destructible;
-import javafx.scene.transform.Scale;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Timer;
 
 public class Tank extends Movable implements Destructible {
 
-	private final static int SPEED = 1*GameField.SCALE;
+	private final static int SPEED = GameField.SCALE;
 	/**
 	 * Delay between bullets (in milliseconds)
 	 */
@@ -36,19 +34,16 @@ public class Tank extends Movable implements Destructible {
 	}
 
 	public void changeDirection(Direction dir) {
-		dx = 0;
-		dy = 0;
 		//Slight move to fit the tank in the narrow corridors and other places
 		if (Direction.isTurn(currentDir, dir)) {
-			double coord;
 			switch (currentDir) {
 				case WEST:
 				case EAST:
-					setX(round(getX(),GameField.BYTE));
+					setX(round(getX()));
 					break;
 				case NORTH:
 				case SOUTH:
-					setY(round(getY(),GameField.BYTE));
+					setY(round(getY()));
 					break;
 			}
 		}
@@ -58,18 +53,22 @@ public class Tank extends Movable implements Destructible {
 			case WEST:
 				image = directions[0];
 				dx = -SPEED;
+				dy = 0;
 				break;
 			case EAST:
 				image = directions[1];
 				dx = SPEED;
+				dy = 0;
 				break;
 			case NORTH:
 				image = directions[2];
 				dy = -SPEED;
+				dx = 0;
 				break;
 			case SOUTH:
 				image = directions[3];
 				dy = SPEED;
+				dx = 0;
 				break;
 		}
 	}
@@ -77,25 +76,18 @@ public class Tank extends Movable implements Destructible {
 	public void keyReleased(KeyEvent e) {
 		int key = e.getKeyCode();
 
-		if (key == KeyEvent.VK_LEFT) {
+		if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
 			dx = 0;
 		}
 
-		if (key == KeyEvent.VK_RIGHT) {
-			dx = 0;
-		}
-
-		if (key == KeyEvent.VK_UP) {
-			dy = 0;
-		}
-
-		if (key == KeyEvent.VK_DOWN) {
+		if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN) {
 			dy = 0;
 		}
 	}
 
 	/**
 	 * Get bullets that tank has shot
+	 *
 	 * @return bullets
 	 */
 	public ArrayList<Bullet> getBullets() {
@@ -106,25 +98,27 @@ public class Tank extends Movable implements Destructible {
 	 * Tank fires a bullet. It should be copied to GameField, where we can control their collision
 	 */
 	public void fire() {
-		if(System.currentTimeMillis()-bulletTimer<DELAY && !bullets.isEmpty())
+		long timePassed = System.currentTimeMillis() - bulletTimer;
+		int delay = bullets.isEmpty() ? DELAY / 3 : DELAY;
+		if (timePassed < delay)
 			return;
 		int x, y;
 		switch (currentDir) {
 			case WEST:
-				x = getBounds().x - Bullet.HEIGHT;
-				y = getBounds().y + (getBounds().height - Bullet.WIDTH) / 2;
+				x = getX() - Bullet.HEIGHT;
+				y = getY() + (getHeight() - Bullet.WIDTH) / 2;
 				break;
 			case EAST:
-				x = getBounds().x + getBounds().width;
-				y = getBounds().y + (getBounds().height - Bullet.WIDTH) / 2;
+				x = getX() + getWidth();
+				y = getY() + (getHeight() - Bullet.WIDTH) / 2;
 				break;
 			case NORTH:
-				x = getBounds().x + (getBounds().width - Bullet.WIDTH) / 2;
-				y = getBounds().y - Bullet.HEIGHT;
+				x = getX() + (getWidth() - Bullet.WIDTH) / 2;
+				y = getY() - Bullet.HEIGHT;
 				break;
 			default:
-				x = getBounds().x + (getBounds().width - Bullet.WIDTH) / 2;
-				y = getBounds().y + getBounds().height;
+				x = getX() + (getWidth() - Bullet.WIDTH) / 2;
+				y = getY() + getHeight();
 				break;
 		}
 
@@ -132,9 +126,14 @@ public class Tank extends Movable implements Destructible {
 		bulletTimer = System.currentTimeMillis();
 	}
 
-	public static int round(double num, int base) {
-		num /= base;
-		num = Math.round(num) * base;
+	/**
+	 * Rounds the coordinate so it fits into the game grid
+	 * @param num needed coordinate
+	 * @return rounded coordinate
+	 */
+	static int round(double num) {
+		num /= GameField.BYTE;
+		num = Math.round(num) * GameField.BYTE;
 		return (int) num;
 	}
 }

@@ -6,7 +6,10 @@ import game_objects.map_objects.turf.Explosion;
 
 public class Bullet extends Movable implements Destructible {
 
-	private final static int SPEED = 5;
+	/**
+	 * Weird behaviour on big speeds, DON'T CHANGE
+	 */
+	private final static int SPEED = 3 * GameField.SCALE;
 	public final static int WIDTH = 3 * GameField.SCALE;
 	public final static int HEIGHT = 4 * GameField.SCALE;
 
@@ -16,14 +19,6 @@ public class Bullet extends Movable implements Destructible {
 		super(x, y, dir);
 
 		init();
-	}
-
-	private void init() {
-		loadImage("resources/sprites/bullet/bullet_%s.png");
-		getImageDimensions();
-	}
-
-	public void move() {
 		switch (currentDir) {
 			case WEST:
 				dx = -SPEED;
@@ -38,13 +33,23 @@ public class Bullet extends Movable implements Destructible {
 				dy = SPEED;
 				break;
 		}
-		super.move();
+	}
+
+	private void init() {
+		loadImage("resources/sprites/bullet/bullet_%s.png");
+		getImageDimensions();
 	}
 
 	@Override
 	public void destroy() {
 		setVisible(false);
-		explosion = new Explosion(Tank.round(getX()-GameField.BYTE/2, GameField.BYTE), Tank.round(getY()-GameField.BYTE/2, GameField.BYTE));
+		int expX = getX() - GameField.BYTE;
+		int expY = getY() - GameField.BYTE;
+		if (currentDir == Direction.EAST || currentDir == Direction.SOUTH) {
+			expX += getWidth();
+			expY += getHeight();
+		}
+		explosion = new Explosion(Tank.round(expX), Tank.round(expY));
 	}
 
 	public Explosion getExplosion() {
