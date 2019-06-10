@@ -118,7 +118,7 @@ public class GameWindow extends JFrame {
 					GameWindow.this.remove(MenuPanel.this);
 					music.stop();
 					GameField gameField = new GameField();
-					gameField.setBounds(10,10,650,650);
+					gameField.setBounds(0,0,624,624);
 					GameWindow.this.add(gameField);
 					GameWindow.this.repaint();
 					gameField.requestFocus();
