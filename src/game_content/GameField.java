@@ -49,10 +49,10 @@ public class GameField extends JPanel implements Runnable {
 	private Tank tank;
 	private AudioClip battleMusic;
 	private Thread animator;
-	private GameWindow.GameFieldPanel gameFieldPanel;
+	private GameFieldPanel gameFieldPanel;
 
 
-	public GameField(Level level, GameWindow.GameFieldPanel gameFieldPanel) {
+	public GameField(Level level, GameFieldPanel gameFieldPanel) {
 		this.gameFieldPanel = gameFieldPanel;
 		initGameField(level);
 	}
@@ -65,7 +65,6 @@ public class GameField extends JPanel implements Runnable {
 		setPreferredSize(new Dimension(FIELD_DIMENSIONS, FIELD_DIMENSIONS));
 		setFocusable(true);
 		initMap(level);
-		gameFieldPanel.gameWon();
 
 	}
 

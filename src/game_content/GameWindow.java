@@ -14,9 +14,9 @@ import javax.swing.*;
 
 public class GameWindow extends JFrame {
 
-	private final int windowWidth = 800;
-	private final int windowHeight = 660;
-	private final String fontName = "cootuecursessquare16x16";
+	public static final int windowWidth = 800;
+	public static final int windowHeight = 660;
+	public static final String fontName = "cootuecursessquare16x16";
 	private AudioClip music;
 
 	public GameWindow() {
@@ -38,7 +38,7 @@ public class GameWindow extends JFrame {
 		setSize(windowWidth,windowHeight);
 
 		createFont();
-		MenuPanel menuPanel = new MenuPanel();
+		MenuPanel menuPanel = new MenuPanel(this);
 		add(menuPanel);
 
 		setLocationRelativeTo(null);
@@ -62,191 +62,7 @@ public class GameWindow extends JFrame {
 		setIconImage(iconImage);
 	}
 
-	class MenuPanel extends JPanel{
 
-		private JComboBox levelsBox;
-		private JLabel labelBackground;
-		public MenuPanel(){
-			setBounds(0,0,windowWidth,windowHeight);
-			setLayout(null);
-			addText();
-			addPlayButton();
-			addLevelsComboBoc();
-			addBackground();
-			playMusic();
-
-		}
-
-		private void addBackground(){
-
-			Image backgroundImage = ScaledImage.create("resources/sprites/menu/background2.gif",windowWidth,windowHeight-30);
-			labelBackground = new JLabel(new ImageIcon(backgroundImage));
-			labelBackground.setBounds(0, 0, windowWidth, windowHeight - 30);
-			add(labelBackground);
-
-		}
-
-		private void playMusic(){
-			music = GameSound.getMenuMusicInstance();
-			music.play();
-		}
-
-
-		private void addText(){
-			JLabel gameName = new JLabel("<html><div style='text-align: center;'>Tank<br>War</div></html>");
-			gameName.setFont(new Font(fontName,1,100));
-			gameName.setForeground(new Color(172,17,21));
-			gameName.setBounds(200,-100,600,500);
-			add(gameName);
-		}
-
-		private void addPlayButton(){
-			JButton playButton = new JButton("Play");
-			playButton.setFont(new Font(fontName,1,50));
-			playButton.setForeground(Color.BLACK);
-			playButton.setBackground(new Color(172,17,21));
-			playButton.setBounds(250,400,300,80);
-			playButton.setBorderPainted(false);
-			playButton.setVerticalAlignment(SwingConstants.BOTTOM);
-			playButton.setFocusPainted(false);
-			playButton.addActionListener(e -> {
-				GameWindow.this.remove(MenuPanel.this);
-				music.stop();
-				GameFieldPanel gameFieldPanel = new GameFieldPanel((Level) levelsBox.getSelectedItem());
-				GameWindow.this.add(gameFieldPanel);
-				GameWindow.this.repaint();
-				gameFieldPanel.requestFocusField();
-			});
-			add(playButton);
-		}
-
-		private void addLevelsComboBoc(){
-			levelsBox = new JComboBox();
-			levelsBox.setRenderer(new CustomComboBoxCellRenderer());
-			levelsBox.setFont(new Font(fontName,0,50));
-			levelsBox.setForeground(Color.BLACK);
-			levelsBox.setBackground(new Color(172,17,21));
-			levelsBox.setBounds(250,500,300,80);
-			levelsBox.setToolTipText("Choose desired level");
-			levelsBox.setMaximumRowCount(2);
-			for (Level level : Level.values()) {
-				levelsBox.addItem(level);
-			}
-			add(levelsBox);
-		}
-
-		class CustomComboBoxCellRenderer extends JLabel implements ListCellRenderer {
-
-			@Override
-			public Component getListCellRendererComponent(
-					JList list,
-					Object value,
-					int index,
-					boolean isSelected,
-					boolean cellHasFocus) {
-
-				JLabel label = new JLabel(){
-					public Dimension getPreferredSize(){
-						return new Dimension(300, 80);
-					}
-				};
-				label.setText(String.valueOf(value));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
-				label.setVerticalAlignment(SwingConstants.BOTTOM);
-				label.setFont(new Font(fontName,0,50));
-				label.setForeground(Color.BLACK);
-
-				return label;
-			}
-		}
-
-
-	}
-
-
-	class GameFieldPanel extends JPanel{
-
-		private GameField gameField;
-		private Level level;
-		private boolean mutedBoolean;
-		private Image mutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/mute_button.png",50,50);
-		private Image unmutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/unmute_button.png",50,50);
-
-		//Level.values()[Level.Two.ordinal()+1]
-		public GameFieldPanel(Level level){
-			setBounds(0,0,windowWidth,windowHeight);
-			setLayout(null);
-			this.level = level;
-			addGameField();
-			addMuteButton();
-			addExitToMenuButton();
-		}
-
-		private void addGameField(){
-			gameField = new GameField(level, this);
-			gameField.setBounds(0,0,624,624);
-			add(gameField);
-			gameField.musicPlay();
-		}
-
-		private void addMuteButton(){
-
-			JButton muteButton = new JButton(new ImageIcon(unmutedImage));
-			muteButton.setBounds(640,540,50,50);
-			muteButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (mutedBoolean){
-						muteButton.setIcon(new ImageIcon(unmutedImage));
-						gameField.musicPlay();
-						mutedBoolean = false;
-						requestFocusField();
-					} else {
-						muteButton.setIcon(new ImageIcon(mutedImage));
-						//Jazz music stops.jpg
-						gameField.musicStop();
-						mutedBoolean=true;
-						requestFocusField();
-					}
-				}
-			});
-			add(muteButton);
-		}
-
-		private void addExitToMenuButton(){
-			JButton exitButton = new JButton(new ImageIcon(ScaledImage.create("resources/sprites/menu/buttons_icon/exit_button.png",50,50)));
-			exitButton.setBounds(730,540,50,50);
-			exitButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameField.musicStop();
-					GameWindow.this.remove(GameFieldPanel.this);
-					GameWindow.this.add(new MenuPanel());
-					GameWindow.this.repaint();
-				}
-			});
-			add(exitButton);
-		}
-
-		public void requestFocusField(){
-			gameField.requestFocus();
-		}
-
-		public void gameWon(){
-
-		}
-
-		public void gameLost(){
-
-		}
-
-		public void tankHpLost(){
-
-		}
-
-
-
-	}
 
 	public static void main(String[] args) {
 
