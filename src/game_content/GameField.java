@@ -78,7 +78,9 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
-		checkCollisions();
+		if(!checkWallCollisions()) {
+			tank.move();
+		}
 		//Synchronizing drawing because of buffering
 		Toolkit.getDefaultToolkit().sync();
 	}
@@ -86,11 +88,15 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Checking collisions of tanks and other objects on the map
 	 */
-	private void checkCollisions() {
-		for (MapObject mo : map)
+	private boolean checkWallCollisions() {
+		for (MapObject mo : map) {
 			if (mo.isCollidable() && tank.getTheoreticalBounds().intersects(mo.getBounds()))
-					return;
-		tank.move();
+				return true;
+		}
+		if(!this.getBounds().contains(tank.getTheoreticalBounds()))
+			return true;
+
+		return false;
 	}
 
 	@Override
