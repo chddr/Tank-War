@@ -73,18 +73,6 @@ public class Tank extends Movable implements Destructible {
 		}
 	}
 
-	public void keyReleased(KeyEvent e) {
-		int key = e.getKeyCode();
-
-		if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
-			dx = 0;
-		}
-
-		if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN) {
-			dy = 0;
-		}
-	}
-
 	/**
 	 * Get bullets that tank has shot
 	 *
@@ -95,7 +83,7 @@ public class Tank extends Movable implements Destructible {
 	}
 
 	/**
-	 * Tank fires a bullet. It should be copied to GameField, where we can control their collision
+	 * PlayerTank fires a bullet. It should be copied to GameField, where we can control their collision
 	 */
 	public void fire() {
 		long timePassed = System.currentTimeMillis() - bulletTimer;
