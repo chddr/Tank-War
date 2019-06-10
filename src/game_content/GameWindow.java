@@ -88,10 +88,9 @@ public class GameWindow extends JFrame {
 		}
 
 		private void addBackground(){
-			Image backgroundImage =
-					Toolkit.getDefaultToolkit().createImage("resources/sprites/menu/background2.gif");
-			Image scaledImage = backgroundImage.getScaledInstance(windowWidth,windowHeight-30,Image.SCALE_DEFAULT);
-			JLabel label = new JLabel(new ImageIcon(scaledImage));
+
+			Image backgroundImage = ScaledImage.create("resources/sprites/menu/background2.gif",windowWidth,windowHeight-30);
+			JLabel label = new JLabel(new ImageIcon(backgroundImage));
 			label.setBounds(0, 0, windowWidth, windowHeight - 30);
 			add(label);
 
@@ -102,7 +101,6 @@ public class GameWindow extends JFrame {
 			JLabel gameName = new JLabel("<html><div style='text-align: center;'>Tank<br>War</div></html>");
 			gameName.setFont(new Font(fontName,1,100));
 			gameName.setForeground(new Color(172,17,21));
-
 			gameName.setBounds(200,-100,600,500);
 			add(gameName);
 		}
@@ -115,16 +113,13 @@ public class GameWindow extends JFrame {
 			playButton.setBounds(250,500,300,80);
 			playButton.setBorderPainted(false);
 			playButton.setFocusPainted(false);
-			playButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					GameWindow.this.remove(MenuPanel.this);
-					music.stop();
-					GameFieldPanel gameFieldPanel = new GameFieldPanel(Level.THREE);
-					GameWindow.this.add(gameFieldPanel);
-					GameWindow.this.repaint();
-					gameFieldPanel.requestFocusField();
-				}
+			playButton.addActionListener(e -> {
+				GameWindow.this.remove(MenuPanel.this);
+				music.stop();
+				GameFieldPanel gameFieldPanel = new GameFieldPanel(Level.THREE);
+				GameWindow.this.add(gameFieldPanel);
+				GameWindow.this.repaint();
+				gameFieldPanel.requestFocusField();
 			});
 			add(playButton);
 		}
