@@ -45,7 +45,7 @@ public class GameWindow extends JFrame {
 
 //		menuPanel.setVisible(false);
 
-		GameField field = new GameField(Level.ONE);
+//		GameField field = new GameField(Level.ONE);
 
 		setResizable(false);
 //		add(field);
@@ -150,7 +150,7 @@ public class GameWindow extends JFrame {
 		}
 
 		private void addGameField(){
-			gameField = new GameField(level);
+			gameField = new GameField(level, this);
 			gameField.setBounds(0,0,624,624);
 			add(gameField);
 			gameField.musicPlay();
@@ -181,6 +181,14 @@ public class GameWindow extends JFrame {
 
 		public void requestFocusField(){
 			gameField.requestFocus();
+		}
+
+		public void gameWon(){
+
+		}
+
+		public void gameLost(){
+
 		}
 
 
