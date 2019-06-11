@@ -17,11 +17,6 @@ public class PlayerTank extends Tank implements Destructible {
 		getImageDimensions();
 	}
 
-	@Override
-	public void destroy() {
-
-	}
-
 	public void keyReleased(KeyEvent e) {
 		int key = e.getKeyCode();
 
