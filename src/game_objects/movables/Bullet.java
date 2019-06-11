@@ -49,7 +49,7 @@ public class Bullet extends Movable implements Destructible {
 			expX += getWidth();
 			expY += getHeight();
 		}
-		explosion = new Explosion(Tank.round(expX), Tank.round(expY));
+		explosion = new Explosion(PlayerTank.round(expX), PlayerTank.round(expY));
 	}
 
 	public Explosion getExplosion() {

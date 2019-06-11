@@ -23,6 +23,12 @@ import java.util.ArrayList;
  */
 public class Map extends ArrayList<MapObject> {
 
+	private Base base;
+
+	public Base getBase() {
+		return base;
+	}
+
 	/**
 	 * Private constructor that generates map from the 2D array
 	 *
@@ -47,7 +53,8 @@ public class Map extends ArrayList<MapObject> {
 				}
 			}
 		}
-		add(new Base(12*GameField.BYTE,24*GameField.BYTE));
+		base = new Base(12*GameField.BYTE,24*GameField.BYTE);
+		add(base);
 	}
 
 	/**
