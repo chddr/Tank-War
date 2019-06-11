@@ -51,8 +51,7 @@ public class GameField extends JPanel implements Runnable {
 	private List<EnemyTank> enemyTanks;
 	private Base base;
 	private Map map;
-
-	private Tank tank;
+	
 	private PlayerTank playerTank;
 	
 	private Thread animator;
