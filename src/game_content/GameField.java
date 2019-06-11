@@ -51,7 +51,6 @@ public class GameField extends JPanel implements Runnable {
 	private List<EnemyTank> enemyTanks;
 	private Base base;
 	private Map map;
-	
 	private PlayerTank playerTank;
 	
 	private Thread animator;
@@ -111,6 +110,7 @@ public class GameField extends JPanel implements Runnable {
 	private void checkWinCondtions() {
 		if(base.isDefeated()){
 			gameFieldPanel.gameLost();
+			Thread.currentThread().stop();
 		}
 	}
 
