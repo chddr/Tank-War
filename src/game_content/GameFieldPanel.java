@@ -68,10 +68,11 @@ public class GameFieldPanel extends JPanel {
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameField.musicStop();
-                gameWindow.remove(GameFieldPanel.this);
-                gameWindow.add(new MenuPanel(gameWindow));
-                gameWindow.repaint();
+//                gameField.musicStop();
+//                gameWindow.remove(GameFieldPanel.this);
+//                gameWindow.add(new MenuPanel(gameWindow));
+//                gameWindow.repaint();
+                roundWon();
             }
         });
         add(exitButton);
@@ -81,11 +82,57 @@ public class GameFieldPanel extends JPanel {
         gameField.requestFocus();
     }
 
-    public void gameWon(){
+    public void roundWon(){
+        if (level.ordinal()+1==Level.values().length){
+            gameWon();
+            return;
+        }
 
+        gameWindow.remove(this);
+        gameField.musicStop();
+        LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+2);
+
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameWindow.remove(loadScreenPanel);
+                gameWindow.add(new GameFieldPanel(gameWindow, Level.values()[level.ordinal()+1]));
+                gameWindow.repaint();
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+        gameWindow.add(loadScreenPanel);
+        gameWindow.repaint();
     }
 
+    //LoadScreen parameter -1 means defeat screen
     public void gameLost(){
+        gameEnd(-1);
+    }
+
+    //LoadScreen parameter 0 means win screen
+    public void gameWon(){
+        gameEnd(0);
+    }
+
+    private void gameEnd(int gameResult){
+        gameWindow.remove(this);
+        gameField.musicStop();
+        LoadScreenPanel loadScreenPanel = new LoadScreenPanel(gameResult);
+
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameWindow.remove(loadScreenPanel);
+                gameWindow.add(new MenuPanel(gameWindow));
+                gameWindow.repaint();
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+        gameWindow.add(loadScreenPanel);
+        gameWindow.repaint();
 
     }
 
