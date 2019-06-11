@@ -112,7 +112,7 @@ public class GameFieldPanel extends JPanel {
     }
 
     //LoadScreen parameter 0 means win screen
-    public void gameWon(){
+    private void gameWon(){
         gameEnd(0);
     }
 
