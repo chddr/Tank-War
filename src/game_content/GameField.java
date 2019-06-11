@@ -47,7 +47,6 @@ public class GameField extends JPanel implements Runnable {
 	private List<Explosion> explosions = new LinkedList<>();
 	private Map map;
 	private Tank tank;
-	private AudioClip battleMusic;
 	private Thread animator;
 	private GameFieldPanel gameFieldPanel;
 
@@ -234,19 +233,6 @@ public class GameField extends JPanel implements Runnable {
 		}
 	}
 
-	public void musicPlay(){
-		battleMusic = GameSound.getBattleMusicInstance();
-		battleMusic.play();
-	}
-
-	public void musicStop(){
-		if (battleMusic!=null)
-			battleMusic.stop();
-	}
-
-	public AudioClip getBattleMusic(){
-		return battleMusic;
-	}
 
 	private class Adapter extends KeyAdapter {
 
