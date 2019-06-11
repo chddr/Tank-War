@@ -75,7 +75,7 @@ public class GameFieldPanel extends JPanel {
 //                gameWindow.remove(GameFieldPanel.this);
 //                gameWindow.add(new MenuPanel(gameWindow));
 //                gameWindow.repaint();
-                gameLost();
+                roundWon();
             }
         });
         add(exitButton);
