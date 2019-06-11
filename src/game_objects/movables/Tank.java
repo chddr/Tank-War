@@ -6,7 +6,7 @@ import game_objects.Destructible;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-public class Tank extends Movable implements Destructible {
+public abstract class Tank extends Movable implements Destructible {
 
 	private final static int SPEED = GameField.SCALE;
 	/**
@@ -24,8 +24,6 @@ public class Tank extends Movable implements Destructible {
 
 	private void init() {
 		bullets = new ArrayList<>();
-		loadImage("resources/sprites/player_tank/tank_%s.png");
-		getImageDimensions();
 	}
 
 	@Override

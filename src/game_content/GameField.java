@@ -6,6 +6,7 @@ import game_objects.map_objects.impassables.Base;
 import game_objects.map_objects.turf.Explosion;
 import game_objects.movables.Bullet;
 import game_objects.movables.Direction;
+import game_objects.movables.EnemyTank;
 import game_objects.movables.PlayerTank;
 import javafx.scene.media.AudioClip;
 import map_tools.Level;
@@ -16,6 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,14 +47,14 @@ public class GameField extends JPanel implements Runnable {
 	 * How many frames it takes for tenth second to pass
 	 */
 	public static final int TENTH_OF_SECOND = 100 / DELAY;
-	private List<Explosion> explosions = new LinkedList<>();
+	private List<Explosion> explosions;
+	private List<EnemyTank> enemyTanks;
 	private Base base;
 	private Map map;
 	private PlayerTank playerTank;
 	private AudioClip battleMusic;
 	private Thread animator;
 	private GameWindow.GameFieldPanel gameFieldPanel;
-
 
 	public GameField(Level level, GameWindow.GameFieldPanel gameFieldPanel) {
 		this.gameFieldPanel = gameFieldPanel;
@@ -76,6 +78,8 @@ public class GameField extends JPanel implements Runnable {
 		map = Map.getLevelMap(level);
 		base = map.getBase();
 		playerTank = new PlayerTank(8 * BYTE, 24 * BYTE, Direction.NORTH);
+		explosions = new LinkedList<>();
+		enemyTanks = new LinkedList<>();
 	}
 
 
@@ -126,6 +130,9 @@ public class GameField extends JPanel implements Runnable {
 					b.destroy();
 					explosions.add(b.getExplosion());
 				}
+
+			}
+			for(EnemyTank eTank : enemyTanks) {
 
 			}
 			if (!this.getBounds().contains(bBounds))
