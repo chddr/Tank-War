@@ -1,11 +1,9 @@
 package game_objects.movables;
 
-import java.util.Random;
-
 public class EnemyTank extends Tank {
-	public EnemyTank(int x, int y, Direction dir) {
-		super(x, y, dir);
 
+	public EnemyTank(int x, int y, Direction dir) {
+		super(x, y, dir, 4000);
 		init();
 	}
 
