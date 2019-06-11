@@ -28,7 +28,7 @@ public abstract class Tank extends Movable implements Destructible {
 
 	@Override
 	public void destroy() {
-
+		setVisible(false);
 	}
 
 	public void changeDirection(Direction dir) {
