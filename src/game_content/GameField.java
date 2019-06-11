@@ -49,7 +49,7 @@ public class GameField extends JPanel implements Runnable {
 	private Base base;
 	private Map map;
 	private PlayerTank playerTank;
-	private AudioClip battleMusic;
+	
 	private Thread animator;
 	private GameFieldPanel gameFieldPanel;
 
@@ -141,6 +141,7 @@ public class GameField extends JPanel implements Runnable {
 	private void checkWinCondtions() {
 		if (base.isDefeated()) {
 			gameFieldPanel.gameLost();
+			Thread.currentThread().stop();
 		}
 	}
 
@@ -280,21 +281,7 @@ public class GameField extends JPanel implements Runnable {
 			beforeTime = System.currentTimeMillis();
 		}
 	}
-
-	public void musicPlay() {
-		battleMusic = GameSound.getBattleMusicInstance();
-		battleMusic.play();
-	}
-
-	public void musicStop() {
-		if (battleMusic != null)
-			battleMusic.stop();
-	}
-
-	public AudioClip getBattleMusic() {
-		return battleMusic;
-	}
-
+	
 	private class Adapter extends KeyAdapter {
 
 		@Override

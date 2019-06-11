@@ -1,6 +1,8 @@
 package game_content;
 
+import javafx.scene.media.AudioClip;
 import map_tools.Level;
+import resources_classes.GameSound;
 import resources_classes.ScaledImage;
 
 import javax.swing.*;
@@ -13,6 +15,7 @@ import static game_content.GameWindow.windowWidth;
 
 public class GameFieldPanel extends JPanel {
 
+    private AudioClip music = GameSound.getBattleMusicInstance();
     private GameWindow gameWindow;
     private GameField gameField;
     private Level level;
@@ -35,7 +38,7 @@ public class GameFieldPanel extends JPanel {
         gameField = new GameField(level, this);
         gameField.setBounds(0,0,624,624);
         add(gameField);
-        gameField.musicPlay();
+        music.play();
     }
 
     private void addMuteButton(){
@@ -47,13 +50,13 @@ public class GameFieldPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (mutedBoolean){
                     muteButton.setIcon(new ImageIcon(unmutedImage));
-                    gameField.musicPlay();
+                    music.play();
                     mutedBoolean = false;
                     requestFocusField();
                 } else {
                     muteButton.setIcon(new ImageIcon(mutedImage));
                     //Jazz music stops.jpg
-                    gameField.musicStop();
+                    music.stop();
                     mutedBoolean=true;
                     requestFocusField();
                 }
@@ -72,7 +75,7 @@ public class GameFieldPanel extends JPanel {
 //                gameWindow.remove(GameFieldPanel.this);
 //                gameWindow.add(new MenuPanel(gameWindow));
 //                gameWindow.repaint();
-                roundWon();
+                gameLost();
             }
         });
         add(exitButton);
@@ -89,15 +92,17 @@ public class GameFieldPanel extends JPanel {
         }
 
         gameWindow.remove(this);
-        gameField.musicStop();
+        music.stop();
         LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+2);
 
         Timer timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gameWindow.remove(loadScreenPanel);
-                gameWindow.add(new GameFieldPanel(gameWindow, Level.values()[level.ordinal()+1]));
+                GameFieldPanel gameFieldPanel = new GameFieldPanel(gameWindow, Level.values()[level.ordinal()+1]);
+                gameWindow.add(gameFieldPanel);
                 gameWindow.repaint();
+                gameFieldPanel.requestFocusField();
             }
         });
         timer.setRepeats(false);
@@ -118,7 +123,7 @@ public class GameFieldPanel extends JPanel {
 
     private void gameEnd(int gameResult){
         gameWindow.remove(this);
-        gameField.musicStop();
+        music.stop();
         LoadScreenPanel loadScreenPanel = new LoadScreenPanel(gameResult);
 
         Timer timer = new Timer(1000, new ActionListener() {
