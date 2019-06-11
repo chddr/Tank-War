@@ -6,7 +6,10 @@ import java.util.Random;
 
 public class GameSound{
 
-    public static final String[] battleMusicPath = {"resources/music/battle/jojo.mp3", "resources/music/battle/octopath_traveler.mp3"};
+    public static final String[] battleMusicPath = {
+            "resources/music/battle/jojo_8bit.mp3",
+            "resources/music/battle/octopath_traveler_8bit.mp3",
+            "resources/music/battle/centuries_8bit.mp3"};
     public static final Random random = new Random();
     private static String lastMusic;
 
