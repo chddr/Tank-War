@@ -5,19 +5,16 @@ import game_objects.map_objects.MapObject;
 import game_objects.map_objects.impassables.Base;
 import game_objects.map_objects.turf.Explosion;
 import game_objects.movables.*;
-import javafx.scene.media.AudioClip;
 import map_tools.Level;
 import map_tools.Map;
-import resources_classes.GameSound;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class GameField extends JPanel implements Runnable {
 
@@ -25,6 +22,10 @@ public class GameField extends JPanel implements Runnable {
 	 * Scale (for resize)
 	 */
 	public static final int SCALE = 3;
+	/**
+	 * Enemy count
+	 */
+	public static final int ENEMY_COUNT = 20;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
@@ -51,10 +52,12 @@ public class GameField extends JPanel implements Runnable {
 	private Base base;
 	private Map map;
 	private PlayerTank playerTank;
-	
+	private int tankAmount = 0;
+
 	private Thread animator;
 	private GameFieldPanel gameFieldPanel;
 	private Timer endTimer;
+	private Timer spawnTimer;
 
 	public GameField(Level level, GameFieldPanel gameFieldPanel) {
 		this.gameFieldPanel = gameFieldPanel;
@@ -80,14 +83,43 @@ public class GameField extends JPanel implements Runnable {
 		tanks = new LinkedList<>();
 		spawnPlayerTank();
 		bullets = new LinkedList<>();
-		for (int i = 0; i < 3; i++) {
-			tanks.add(new EnemyTank(i * BYTE * 12, 0, Direction.SOUTH));
-		}
+		spawnTimer = new Timer(4000, e -> {
+			spawnEnemyTank();
+		});
+		spawnTimer.start();
+		spawnEnemyTank();
 	}
 
 	private void spawnPlayerTank() {
+		tanks.removeIf(tank -> tank instanceof PlayerTank);
 		playerTank = new PlayerTank(8 * BYTE, 24 * BYTE, Direction.NORTH);
 		tanks.add(playerTank);
+	}
+
+	private void spawnEnemyTank() {
+		int x, y = 0;
+		boolean tankSpawned = false;
+		if (tanks.size() < 7 && tankAmount <= ENEMY_COUNT) {
+			while (!tankSpawned) {
+				int i = new Random().nextInt(3);
+				x = i * BYTE * 12;
+				if (noTankAt(x, y)) {
+					tankAmount++;
+					tanks.add(new EnemyTank(x, y, Direction.SOUTH));
+					tankSpawned = true;
+				}
+			}
+		}
+	}
+
+	private boolean noTankAt(int x, int y) {
+		System.out.println((x + "" + y));
+		for (Tank t : tanks) {
+			System.out.println(t.getBounds());
+			if (t.getBounds().intersects(x, y, 2 * BYTE, 2 * BYTE))
+				return false;
+		}
+		return true;
 	}
 
 
@@ -106,7 +138,7 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
-		if(!playerTank.isVisible()) {
+		if (!playerTank.isVisible()) {
 			spawnPlayerTank();
 			gameFieldPanel.tankHpLost();
 		}
@@ -119,8 +151,14 @@ public class GameField extends JPanel implements Runnable {
 
 	private void checkAllTanksCollision() {
 		for (Tank t : tanks) {
-			if (!checkWallCollisions(t) && !checkTankCollisions(t))
+			if(t instanceof EnemyTank) {
+				t.fire();
+				if (new Random().nextDouble() < 0.02)
+					t.changeDirection(Direction.values()[new Random().nextInt(Direction.values().length)]);
+			}
+			if (!checkWallCollisions(t) && !checkTankCollisions(t)) {
 				t.move();
+			}
 		}
 	}
 
@@ -129,8 +167,8 @@ public class GameField extends JPanel implements Runnable {
 	 */
 	private boolean checkTankCollisions(Tank tank) {
 		Rectangle tBounds = tank.getTheoreticalBounds();
-		for (Tank t: tanks ) {
-			if(t!=tank && tBounds.intersects(t.getBounds()))
+		for (Tank t : tanks) {
+			if (t != tank && tBounds.intersects(t.getBounds()))
 				return true;
 		}
 		return false;
@@ -151,8 +189,8 @@ public class GameField extends JPanel implements Runnable {
 
 	//Timer must be initialized only one time or duplicate menu appears
 	private void checkWinCondtions() {
-		if(base.isDefeated() && endTimer==null){
-			endTimer = new Timer(100, e -> {
+		if (base.isDefeated() && endTimer == null) {
+			endTimer = new Timer(1000, e -> {
 				gameFieldPanel.gameLost();
 				Thread.currentThread().stop();
 			});
@@ -163,14 +201,14 @@ public class GameField extends JPanel implements Runnable {
 
 	private void updateBullets() {
 		bullets = new LinkedList<>();
-		for(Tank t : tanks) {
+		for (Tank t : tanks) {
 			t.getBullets().removeIf(bullet -> !bullet.isVisible());
 			bullets.addAll(t.getBullets());
 		}
 		for (Bullet b : bullets) {
 			Rectangle bBounds = b.getTheoreticalBounds();
 			for (Bullet b1 : bullets) {
-				if(b!=b1 && bBounds.intersects(b1.getBounds())) {
+				if (b != b1 && bBounds.intersects(b1.getBounds())) {
 					b.destroy();
 					b1.destroy();
 					explosions.add(b.getExplosion());
@@ -187,6 +225,9 @@ public class GameField extends JPanel implements Runnable {
 			}
 			for (Tank t : tanks) {
 				if (bBounds.intersects(t.getBounds())) {
+					if (t instanceof EnemyTank) {
+						//TODO action to gameFieldPanel
+					}
 					t.destroy();
 					b.destroy();
 					explosions.add(b.getExplosion());
@@ -297,7 +338,7 @@ public class GameField extends JPanel implements Runnable {
 			beforeTime = System.currentTimeMillis();
 		}
 	}
-	
+
 	private class Adapter extends KeyAdapter {
 
 		@Override
