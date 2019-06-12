@@ -99,7 +99,7 @@ public class GameField extends JPanel implements Runnable {
 	private void spawnEnemyTank() {
 		int x, y = 0;
 		boolean tankSpawned = false;
-		if (tanks.size() < 7 && tankAmount <= ENEMY_COUNT) {
+		if (tanks.size() < 7 && tankAmount < ENEMY_COUNT) {
 			while (!tankSpawned) {
 				int i = new Random().nextInt(3);
 				x = i * BYTE * 12;
@@ -138,9 +138,9 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
-		if (!playerTank.isVisible()) {
+		if (!playerTank.isVisible() && gameFieldPanel.getRespawns()>0) {
 			spawnPlayerTank();
-			gameFieldPanel.tankHpLost();
+			gameFieldPanel.playerTankDestroyed();
 		}
 		checkWinCondtions();
 		checkAllTanksCollision();
@@ -225,12 +225,14 @@ public class GameField extends JPanel implements Runnable {
 			}
 			for (Tank t : tanks) {
 				if (bBounds.intersects(t.getBounds())) {
-					if (t instanceof EnemyTank) {
-						//TODO action to gameFieldPanel
-					}
-					t.destroy();
 					b.destroy();
-					explosions.add(b.getExplosion());
+					if(!(b instanceof EnemyBullet)) {
+						t.destroy();
+						explosions.add(b.getExplosion());
+						if (t instanceof EnemyTank) {
+							gameFieldPanel.enemyTankDestroyed();
+						}
+					}
 				}
 			}
 			if (!this.getBounds().contains(bBounds))

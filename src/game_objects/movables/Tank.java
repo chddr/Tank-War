@@ -106,13 +106,16 @@ public abstract class Tank extends Movable implements Destructible {
 				y = getY() + getHeight();
 				break;
 		}
-
-		bullets.add(new Bullet(x, y, currentDir));
+		if (this instanceof EnemyTank)
+			bullets.add(new EnemyBullet(x, y, currentDir));
+		else
+			bullets.add(new Bullet(x, y, currentDir));
 		bulletTimer = System.currentTimeMillis();
 	}
 
 	/**
 	 * Rounds the coordinate so it fits into the game grid
+	 *
 	 * @param num needed coordinate
 	 * @return rounded coordinate
 	 */
