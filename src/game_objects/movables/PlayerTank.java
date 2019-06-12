@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 public class PlayerTank extends Tank implements Destructible {
 
 	public PlayerTank(int x, int y, Direction dir) {
-		super(x, y, dir);
+		super(x, y, dir, 1500);
 
 		init();
 	}
@@ -15,11 +15,6 @@ public class PlayerTank extends Tank implements Destructible {
 	private void init() {
 		loadImage("resources/sprites/player_tank/tank_%s.png");
 		getImageDimensions();
-	}
-
-	@Override
-	public void destroy() {
-
 	}
 
 	public void keyReleased(KeyEvent e) {

@@ -3,7 +3,6 @@ package game_objects.movables;
 import game_content.GameField;
 import game_objects.Destructible;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public abstract class Tank extends Movable implements Destructible {
@@ -12,13 +11,13 @@ public abstract class Tank extends Movable implements Destructible {
 	/**
 	 * Delay between bullets (in milliseconds)
 	 */
-	private static final int DELAY = 1500;
+	private int delay;
 	private ArrayList<Bullet> bullets;
 	private long bulletTimer;
 
-	public Tank(int x, int y, Direction dir) {
+	public Tank(int x, int y, Direction dir, int delay) {
 		super(x, y, dir);
-
+		this.delay = delay;
 		init();
 	}
 
@@ -28,7 +27,7 @@ public abstract class Tank extends Movable implements Destructible {
 
 	@Override
 	public void destroy() {
-
+		setVisible(false);
 	}
 
 	public void changeDirection(Direction dir) {
@@ -85,7 +84,7 @@ public abstract class Tank extends Movable implements Destructible {
 	 */
 	public void fire() {
 		long timePassed = System.currentTimeMillis() - bulletTimer;
-		int delay = bullets.isEmpty() ? DELAY / 3 : DELAY;
+		int delay = bullets.isEmpty() ? this.delay / 3 : this.delay;
 		if (timePassed < delay)
 			return;
 		int x, y;
