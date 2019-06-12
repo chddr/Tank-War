@@ -171,6 +171,7 @@ public class GameFieldPanel extends JPanel {
 
     private void gameEnd(int gameResult){
         gameWindow.remove(this);
+        musicStop=true;
         music.stop();
         LoadScreenPanel loadScreenPanel = new LoadScreenPanel(gameResult);
 
