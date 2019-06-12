@@ -76,14 +76,18 @@ public class GameField extends JPanel implements Runnable {
 		addKeyListener(new Adapter());
 		map = Map.getLevelMap(level);
 		base = map.getBase();
-		playerTank = new PlayerTank(8 * BYTE, 24 * BYTE, Direction.NORTH);
 		explosions = new LinkedList<>();
 		tanks = new LinkedList<>();
+		spawnPlayerTank();
 		bullets = new LinkedList<>();
-		tanks.add(playerTank);
 		for (int i = 0; i < 3; i++) {
 			tanks.add(new EnemyTank(i * BYTE * 12, 0, Direction.SOUTH));
 		}
+	}
+
+	private void spawnPlayerTank() {
+		playerTank = new PlayerTank(8 * BYTE, 24 * BYTE, Direction.NORTH);
+		tanks.add(playerTank);
 	}
 
 
@@ -102,6 +106,10 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
+		if(!playerTank.isVisible()) {
+			spawnPlayerTank();
+			gameFieldPanel.tankHpLost();
+		}
 		checkWinCondtions();
 		checkAllTanksCollision();
 		updateBullets();
