@@ -11,7 +11,6 @@ public class GameSound{
             "resources/music/battle/jojo_op2_8bit.mp3",
             "resources/music/battle/jojo_op3_8bit.mp3",
             "resources/music/battle/octopath_traveler_8bit.mp3",
-            "resources/music/battle/centuries_8bit.mp3",
             "resources/music/battle/megalovania_8bit.mp3"
 
     };
