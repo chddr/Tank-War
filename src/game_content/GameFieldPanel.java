@@ -10,8 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static game_content.GameWindow.windowHeight;
-import static game_content.GameWindow.windowWidth;
+import static game_content.GameWindow.*;
 
 public class GameFieldPanel extends JPanel {
 
@@ -19,20 +18,63 @@ public class GameFieldPanel extends JPanel {
     private GameWindow gameWindow;
     private GameField gameField;
     private Level level;
-    private boolean mutedBoolean;
+    private boolean musicMute;
+    private boolean musicStop;
     private Image mutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/mute_button.png",50,50);
     private Image unmutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/unmute_button.png",50,50);
 
     //Level.values()[Level.Two.ordinal()+1]
     public GameFieldPanel(GameWindow gameWindow, Level level){
         this.gameWindow = gameWindow;
+        this.level = level;
         setBounds(0,0,windowWidth,windowHeight);
         setLayout(null);
-        this.level = level;
+        setBackground(Color.DARK_GRAY);
         addGameField();
         addMuteButton();
         addExitToMenuButton();
+        addLifeIcon();
+        addFlagIconAndInfo();
+        checkMusicPlaying();
+
     }
+
+    private void checkMusicPlaying(){
+        if(!musicStop){
+            Timer timer = new Timer(5000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (!music.isPlaying() && !musicMute && !musicStop){
+                        music = GameSound.getBattleMusicInstance();
+                        music.play();
+                    }
+                    checkMusicPlaying();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+    }
+
+    private void addLifeIcon(){
+        Image heart = ScaledImage.create("resources/sprites/menu/heart_icon.png",75,75);
+        JLabel label = new JLabel(new ImageIcon(heart));
+        label.setBounds(720, 200, 75, 75);
+        add(label);
+    }
+
+    private void addFlagIconAndInfo(){
+        Image flagImage = ScaledImage.create("resources/sprites/menu/flag_icon.png",100,100);
+        JLabel flag = new JLabel(new ImageIcon(flagImage));
+        flag.setBounds(710, 380, 100, 100);
+        add(flag);
+        JLabel number = new JLabel(level.ordinal()+1+"");
+        number.setFont(new Font(fontName,0,70));
+        number.setForeground(Color.WHITE);
+        number.setBounds(630, 400, 100, 100);
+        add(number);
+    }
+
 
     private void addGameField(){
         gameField = new GameField(level, this);
@@ -45,19 +87,21 @@ public class GameFieldPanel extends JPanel {
 
         JButton muteButton = new JButton(new ImageIcon(unmutedImage));
         muteButton.setBounds(640,540,50,50);
+        muteButton.setBackground(Color.DARK_GRAY);
+        muteButton.setBorderPainted(false);
         muteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (mutedBoolean){
+                if (musicMute){
                     muteButton.setIcon(new ImageIcon(unmutedImage));
                     music.play();
-                    mutedBoolean = false;
+                    musicMute = false;
                     requestFocusField();
                 } else {
                     muteButton.setIcon(new ImageIcon(mutedImage));
                     //Jazz music stops.jpg
                     music.stop();
-                    mutedBoolean=true;
+                    musicMute=true;
                     requestFocusField();
                 }
             }
@@ -67,11 +111,14 @@ public class GameFieldPanel extends JPanel {
 
     private void addExitToMenuButton(){
         JButton exitButton = new JButton(new ImageIcon(ScaledImage.create("resources/sprites/menu/buttons_icon/exit_button.png",50,50)));
+        exitButton.setBackground(Color.DARK_GRAY);
+        exitButton.setBorderPainted(false);
         exitButton.setBounds(730,540,50,50);
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                gameField.musicStop();
+//                musicStop=true;
+//                music.stop();
 //                gameWindow.remove(GameFieldPanel.this);
 //                gameWindow.add(new MenuPanel(gameWindow));
 //                gameWindow.repaint();
@@ -86,13 +133,14 @@ public class GameFieldPanel extends JPanel {
     }
 
     public void roundWon(){
+        musicStop = true;
+        music.stop();
         if (level.ordinal()+1==Level.values().length){
             gameWon();
             return;
         }
 
         gameWindow.remove(this);
-        music.stop();
         LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+2);
 
         Timer timer = new Timer(1000, new ActionListener() {
