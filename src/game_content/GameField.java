@@ -152,12 +152,9 @@ public class GameField extends JPanel implements Runnable {
 	//Timer must be initialized only one time or duplicate menu appears
 	private void checkWinCondtions() {
 		if(base.isDefeated() && endTimer==null){
-			endTimer = new Timer(3000, new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameFieldPanel.gameLost();
-					Thread.currentThread().stop();
-				}
+			endTimer = new Timer(100, e -> {
+				gameFieldPanel.gameLost();
+				Thread.currentThread().stop();
 			});
 			endTimer.setRepeats(false);
 			endTimer.start();
