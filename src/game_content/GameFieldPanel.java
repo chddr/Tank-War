@@ -18,6 +18,7 @@ public class GameFieldPanel extends JPanel {
     private GameWindow gameWindow;
     private GameField gameField;
     private JLabel numberOfRespawns;
+    private JLabel numberEnemyTanksLabel;
     private int enemyTanksDestroyed;
     private Level level;
     private boolean musicMute;
@@ -37,6 +38,7 @@ public class GameFieldPanel extends JPanel {
         addExitToMenuButton();
         addLifeIcon();
         addFlagIconAndInfo();
+        addEnemyTankLabelAndText();
         checkMusicPlaying();
 
     }
@@ -57,6 +59,21 @@ public class GameFieldPanel extends JPanel {
             timer.start();
         }
     }
+
+    private void addEnemyTankLabelAndText(){
+        Image heart = ScaledImage.create("resources/sprites/menu/enemy_tank_icon.png",75,75);
+        JLabel label = new JLabel(new ImageIcon(heart));
+        label.setBounds(720, 0, 75, 75);
+        add(label);
+
+        numberEnemyTanksLabel = new JLabel(20-enemyTanksDestroyed+"x");
+        numberEnemyTanksLabel.setFont(new Font(fontName,0,30));
+        numberEnemyTanksLabel.setForeground(Color.WHITE);
+        numberEnemyTanksLabel.setBounds(625, 0, 100, 100);
+        add(numberEnemyTanksLabel);
+    }
+
+
 
     private void addLifeIcon(){
         Image heart = ScaledImage.create("resources/sprites/menu/heart_icon.png",75,75);
@@ -219,6 +236,7 @@ public class GameFieldPanel extends JPanel {
 
     public void enemyTankDestroyed(){
         enemyTanksDestroyed++;
+        numberEnemyTanksLabel.setText(20-enemyTanksDestroyed+"x");
         if (enemyTanksDestroyed==20){
             Timer timer = new Timer(3000, new ActionListener() {
                 @Override
