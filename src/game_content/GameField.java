@@ -12,6 +12,8 @@ import resources_classes.GameSound;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
@@ -52,6 +54,7 @@ public class GameField extends JPanel implements Runnable {
 	
 	private Thread animator;
 	private GameFieldPanel gameFieldPanel;
+	private Timer endTimer;
 
 	public GameField(Level level, GameFieldPanel gameFieldPanel) {
 		this.gameFieldPanel = gameFieldPanel;
@@ -138,10 +141,18 @@ public class GameField extends JPanel implements Runnable {
 
 	}
 
+	//Timer must be initialized only one time or duplicate menu appears
 	private void checkWinCondtions() {
-		if (base.isDefeated()) {
-			gameFieldPanel.gameLost();
-			Thread.currentThread().stop();
+		if(base.isDefeated() && endTimer==null){
+			endTimer = new Timer(3000, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gameFieldPanel.gameLost();
+					Thread.currentThread().stop();
+				}
+			});
+			endTimer.setRepeats(false);
+			endTimer.start();
 		}
 	}
 

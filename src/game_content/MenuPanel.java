@@ -7,6 +7,8 @@ import resources_classes.ScaledImage;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static game_content.GameWindow.*;
 
@@ -15,6 +17,7 @@ public class MenuPanel extends JPanel {
     private AudioClip music;
     private JComboBox levelsBox;
     private JLabel labelBackground;
+    private boolean musicStop;
     private GameWindow gameWindow;
     public MenuPanel(GameWindow gameWindow){
         this.gameWindow = gameWindow;
@@ -26,6 +29,7 @@ public class MenuPanel extends JPanel {
         addLevelsComboBoc();
         addBackground();
         playMusic();
+        checkMusicPlaying();
 
     }
 
@@ -41,8 +45,25 @@ public class MenuPanel extends JPanel {
     private void playMusic(){
         music = GameSound.getMenuMusicInstance();
         music.play();
+        music.isPlaying();
     }
 
+    private void checkMusicPlaying(){
+        if(!musicStop){
+            Timer timer = new Timer(5000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (!music.isPlaying() && !musicStop){
+                        music = GameSound.getMenuMusicInstance();
+                        music.play();
+                    }
+                    checkMusicPlaying();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+    }
 
     private void addText(){
         JLabel gameName = new JLabel("<html><div style='text-align: center;'>Tank<br>War</div></html>");
@@ -63,11 +84,25 @@ public class MenuPanel extends JPanel {
         playButton.setFocusPainted(false);
         playButton.addActionListener(e -> {
             gameWindow.remove(MenuPanel.this);
+            musicStop=true;
             music.stop();
-            GameFieldPanel gameFieldPanel = new GameFieldPanel(gameWindow,(Level) levelsBox.getSelectedItem());
-            gameWindow.add(gameFieldPanel);
+            Level level = (Level)levelsBox.getSelectedItem();
+            LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+1);
+
+            Timer timer = new Timer(0, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    gameWindow.remove(loadScreenPanel);
+                    GameFieldPanel gameFieldPanel = new GameFieldPanel(gameWindow,level);
+                    gameWindow.add(gameFieldPanel);
+                    gameWindow.repaint();
+                    gameFieldPanel.requestFocusField();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+            gameWindow.add(loadScreenPanel);
             gameWindow.repaint();
-            gameFieldPanel.requestFocusField();
         });
         add(playButton);
     }
