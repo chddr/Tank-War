@@ -55,6 +55,10 @@ public class GameWindow extends JFrame {
 		return respawns;
 	}
 
+	public void setRespawns(int respawns){
+		this.respawns=respawns;
+	}
+
 
 	private void createFont(){
 		try{
