@@ -18,6 +18,7 @@ public class GameWindow extends JFrame {
 	public static final int windowHeight = 660;
 	public static final String fontName = "cootuecursessquare16x16";
 	private AudioClip music;
+	private int respawns = 3;
 
 	public GameWindow() {
 
@@ -46,6 +47,15 @@ public class GameWindow extends JFrame {
 
 	}
 
+	public void playerTankDestroyed(){
+		respawns--;
+	}
+
+	public int getRespawns(){
+		return respawns;
+	}
+
+
 	private void createFont(){
 		try{
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -61,8 +71,6 @@ public class GameWindow extends JFrame {
 				Toolkit.getDefaultToolkit().createImage("resources/sprites/window/icon.png");
 		setIconImage(iconImage);
 	}
-
-
 
 	public static void main(String[] args) {
 

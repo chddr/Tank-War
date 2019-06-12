@@ -17,6 +17,8 @@ public class GameFieldPanel extends JPanel {
     private AudioClip music = GameSound.getBattleMusicInstance();
     private GameWindow gameWindow;
     private GameField gameField;
+    private JLabel numberOfRespawns;
+    private int enemyTanksDestroyed;
     private Level level;
     private boolean musicMute;
     private boolean musicStop;
@@ -61,6 +63,12 @@ public class GameFieldPanel extends JPanel {
         JLabel label = new JLabel(new ImageIcon(heart));
         label.setBounds(720, 200, 75, 75);
         add(label);
+
+        numberOfRespawns = new JLabel(gameWindow.getRespawns()+"x");
+        numberOfRespawns.setFont(new Font(fontName,0,40));
+        numberOfRespawns.setForeground(Color.WHITE);
+        numberOfRespawns.setBounds(635, 200, 100, 100);
+        add(numberOfRespawns);
     }
 
     private void addFlagIconAndInfo(){
@@ -68,10 +76,10 @@ public class GameFieldPanel extends JPanel {
         JLabel flag = new JLabel(new ImageIcon(flagImage));
         flag.setBounds(710, 380, 100, 100);
         add(flag);
-        JLabel number = new JLabel(level.ordinal()+1+"");
-        number.setFont(new Font(fontName,0,70));
+        JLabel number = new JLabel(level.ordinal()+1+"x");
+        number.setFont(new Font(fontName,0,40));
         number.setForeground(Color.WHITE);
-        number.setBounds(630, 400, 100, 100);
+        number.setBounds(635, 400, 100, 100);
         add(number);
     }
 
@@ -123,6 +131,7 @@ public class GameFieldPanel extends JPanel {
 //                gameWindow.add(new MenuPanel(gameWindow));
 //                gameWindow.repaint();
                 roundWon();
+
             }
         });
         add(exitButton);
@@ -190,10 +199,41 @@ public class GameFieldPanel extends JPanel {
 
     }
 
-    public void tankHpLost(){
+    public void playerTankDestroyed(){
+        gameWindow.playerTankDestroyed();
+        int respawns = gameWindow.getRespawns();
+        if(respawns!=-1){
+            numberOfRespawns.setText(respawns+"x");
+        } else {
+            Timer timer = new Timer(3000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    gameLost();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
 
     }
 
+    public void enemyTankDestroyed(){
+        enemyTanksDestroyed++;
+        if (enemyTanksDestroyed==20){
+            Timer timer = new Timer(3000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    roundWon();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+    }
+
+    public int getRespawns(){
+        return gameWindow.getRespawns();
+    }
 
 
 }
