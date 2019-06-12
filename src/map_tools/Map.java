@@ -66,7 +66,7 @@ public class Map extends ArrayList<MapObject> {
 	public static Map getLevelMap(Level level) {
 		int[][] map = null;
 		switch (level) {
-			case ONE:
+			case FIRST:
 				map =
 						new int[][]
 									   {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -97,7 +97,7 @@ public class Map extends ArrayList<MapObject> {
 										{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 								};
 				break;
-			case TWO:
+			case SECOND:
 				map =
 						new int[][]
 									   {{0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -128,7 +128,7 @@ public class Map extends ArrayList<MapObject> {
 										{0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
 								};
 				break;
-			case THREE:
+			case THIRD:
 				map =
 						new int[][]
 								       {{0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -159,7 +159,7 @@ public class Map extends ArrayList<MapObject> {
 										{2, 2, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
 								};
 				break;
-			case FOUR:
+			case FOURTH:
 				//Not 4, its 3
 				map =
 						new int[][]
