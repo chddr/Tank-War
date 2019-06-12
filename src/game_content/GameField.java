@@ -10,6 +10,8 @@ import map_tools.Map;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
@@ -138,10 +140,7 @@ public class GameField extends JPanel implements Runnable {
 	 * All actions that should be performed every game tick
 	 */
 	private void cycle() {
-		if (!playerTank.isVisible()) {
-			spawnPlayerTank();
-			gameFieldPanel.tankHpLost();
-		}
+		checkTankRespawns();
 		checkWinCondtions();
 		checkAllTanksCollision();
 		updateBullets();
@@ -158,6 +157,25 @@ public class GameField extends JPanel implements Runnable {
 			}
 			if (!checkWallCollisions(t) && !checkTankCollisions(t)) {
 				t.move();
+			}
+		}
+	}
+
+	private void checkTankRespawns(){
+		if (!playerTank.isVisible() && endTimer==null) {
+
+			gameFieldPanel.playerTankDestroyed();
+			if (gameFieldPanel.getRespawns()!=-1){
+				spawnPlayerTank();
+			} else {
+				endTimer = new Timer(3000, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						gameFieldPanel.gameLost();
+					}
+				});
+				endTimer.setRepeats(false);
+				endTimer.start();
 			}
 		}
 	}

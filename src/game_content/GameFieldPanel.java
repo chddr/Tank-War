@@ -206,6 +206,7 @@ public class GameFieldPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 gameWindow.remove(loadScreenPanel);
                 gameWindow.add(new MenuPanel(gameWindow));
+                gameWindow.setRespawns(3);
                 gameWindow.repaint();
             }
         });
@@ -221,16 +222,17 @@ public class GameFieldPanel extends JPanel {
         int respawns = gameWindow.getRespawns();
         if(respawns!=-1){
             numberOfRespawns.setText(respawns+"x");
-        } else {
-            Timer timer = new Timer(3000, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    gameLost();
-                }
-            });
-            timer.setRepeats(false);
-            timer.start();
         }
+//        else {
+//            Timer timer = new Timer(3000, new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    gameLost();
+//                }
+//            });
+//            timer.setRepeats(false);
+//            timer.start();
+//        }
 
     }
 
