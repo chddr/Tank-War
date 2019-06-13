@@ -9,14 +9,14 @@ import map_tools.Level;
 import map_tools.Map;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class GameField extends JPanel implements Runnable {
 
@@ -103,16 +103,17 @@ public class GameField extends JPanel implements Runnable {
 	}
 
 	private void spawnEnemyTank() {
-		int x, y = 0;
-		boolean tankSpawned = false;
 		if (tanks.size() < MAX_ENEMIES+1 && tankAmount < ENEMY_COUNT) {
-			while (!tankSpawned) {
-				int i = new Random().nextInt(3);
-				x = i * BYTE * 12;
-				if (noTankAt(x, y)) {
+			List<Integer> list = new ArrayList<>();
+			list.add(0);
+			list.add(BYTE*12);
+			list.add(BYTE*12*2);
+			Collections.shuffle(list);
+			for (int x : list ) {
+				if (noTankAt(x, 0)) {
 					tankAmount++;
-					tanks.add(new EnemyTank(x, y, Direction.SOUTH));
-					tankSpawned = true;
+					tanks.add(new EnemyTank(x, 0, Direction.SOUTH));
+					break;
 				}
 			}
 		}
