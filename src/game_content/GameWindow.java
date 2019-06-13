@@ -51,6 +51,10 @@ public class GameWindow extends JFrame {
 		respawns--;
 	}
 
+	public void playerRespawnGained(){
+		respawns++;
+	}
+
 	public int getRespawns(){
 		return respawns;
 	}
@@ -58,6 +62,8 @@ public class GameWindow extends JFrame {
 	public void setRespawns(int respawns){
 		this.respawns=respawns;
 	}
+
+
 
 
 	private void createFont(){
