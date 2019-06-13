@@ -9,14 +9,14 @@ import map_tools.Level;
 import map_tools.Map;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class GameField extends JPanel implements Runnable {
 
@@ -27,7 +27,11 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Enemy count
 	 */
-	public static final int ENEMY_COUNT = 20;
+	public static final int ENEMY_COUNT = 40;
+	/**
+	 * Maximum number of enemies on screen
+	 */
+	public static final int MAX_ENEMIES = 10;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
@@ -85,7 +89,7 @@ public class GameField extends JPanel implements Runnable {
 		tanks = new LinkedList<>();
 		spawnPlayerTank();
 		bullets = new LinkedList<>();
-		spawnTimer = new Timer(4000, e -> {
+		spawnTimer = new Timer(2000, e -> {
 			spawnEnemyTank();
 		});
 		spawnTimer.start();
@@ -99,16 +103,17 @@ public class GameField extends JPanel implements Runnable {
 	}
 
 	private void spawnEnemyTank() {
-		int x, y = 0;
-		boolean tankSpawned = false;
-		if (tanks.size() < 7 && tankAmount < ENEMY_COUNT) {
-			while (!tankSpawned) {
-				int i = new Random().nextInt(3);
-				x = i * BYTE * 12;
-				if (noTankAt(x, y)) {
+		if (tanks.size() < MAX_ENEMIES+1 && tankAmount < ENEMY_COUNT) {
+			List<Integer> list = new ArrayList<>();
+			list.add(0);
+			list.add(BYTE*12);
+			list.add(BYTE*12*2);
+			Collections.shuffle(list);
+			for (int x : list ) {
+				if (noTankAt(x, 0)) {
 					tankAmount++;
-					tanks.add(new EnemyTank(x, y, Direction.SOUTH));
-					tankSpawned = true;
+					tanks.add(new EnemyTank(x, 0, Direction.SOUTH));
+					break;
 				}
 			}
 		}
@@ -244,7 +249,7 @@ public class GameField extends JPanel implements Runnable {
 			for (Tank t : tanks) {
 				if (bBounds.intersects(t.getBounds())) {
 					b.destroy();
-					if(!(b instanceof EnemyBullet)) {
+					if(!(b instanceof EnemyBullet) || t instanceof PlayerTank) {
 						t.destroy();
 						explosions.add(b.getExplosion());
 						if (t instanceof EnemyTank) {

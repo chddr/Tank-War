@@ -66,7 +66,7 @@ public class GameFieldPanel extends JPanel {
         label.setBounds(720, 0, 75, 75);
         add(label);
 
-        numberEnemyTanksLabel = new JLabel(20-enemyTanksDestroyed+"x");
+        numberEnemyTanksLabel = new JLabel(GameField.ENEMY_COUNT-enemyTanksDestroyed+"x");
         numberEnemyTanksLabel.setFont(new Font(fontName,0,30));
         numberEnemyTanksLabel.setForeground(Color.WHITE);
         numberEnemyTanksLabel.setBounds(625, 0, 100, 100);
@@ -238,8 +238,8 @@ public class GameFieldPanel extends JPanel {
 
     public void enemyTankDestroyed(){
         enemyTanksDestroyed++;
-        numberEnemyTanksLabel.setText(20-enemyTanksDestroyed+"x");
-        if (enemyTanksDestroyed==20){
+        numberEnemyTanksLabel.setText(GameField.ENEMY_COUNT-enemyTanksDestroyed+"x");
+        if (enemyTanksDestroyed==GameField.ENEMY_COUNT){
             Timer timer = new Timer(3000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

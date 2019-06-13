@@ -20,6 +20,7 @@ public class GameSound{
             "resources/music/menu/paint_it_black.mp3",
             "resources/music/menu/i'm nuclear.mp3",
             "resources/music/menu/waste_land.mp3"
+            "resources/music/menu/2+2.mp3"
     };
 
     public static final Random random = new Random();
