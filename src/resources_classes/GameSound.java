@@ -18,7 +18,8 @@ public class GameSound{
     public static final String[] menuMusicPath = {
             "resources/music/menu/six_days_war.mp3",
             "resources/music/menu/paint_it_black.mp3",
-            "resources/music/menu/i'm nuclear.mp3"
+            "resources/music/menu/i'm nuclear.mp3",
+            "resources/music/menu/2+2.mp3"
     };
 
     public static final Random random = new Random();
