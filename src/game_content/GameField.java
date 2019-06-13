@@ -8,6 +8,7 @@ import game_objects.map_objects.turf.Explosion;
 import game_objects.movables.*;
 import map_tools.Level;
 import map_tools.Map;
+import resources_classes.GameSound;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -167,18 +168,30 @@ public class GameField extends JPanel implements Runnable {
 				p.setVisible(false);
 				switch (p.getType()) {
 					case UPGRADE:
+						GameSound.test().play();
 						playerTank.upgrade();
 						break;
 					case HEALTH:
+						GameSound.test().play();
 						gameFieldPanel.playerRespawnGained();
 						break;
 					case TIME_STOP:
-						timeStopped = true;
-						timeStopTimer = new Timer(5000, e -> {
-							timeStopped = false;
+						Timer timer = new Timer(4000, new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								gameFieldPanel.musicStop();
+								timeStopped = true;
+								timeStopTimer = new Timer(5000, k -> {
+									timeStopped = false;
+									gameFieldPanel.musicPlay();
+								});
+								timeStopTimer.start();
+								timeStopTimer.setRepeats(false);
+							}
 						});
-						timeStopTimer.start();
-						timeStopTimer.setRepeats(false);
+						timer.setRepeats(false);
+						timer.start();
+						GameSound.getStopTimeSoundInstance().play();
 						break;
 				}
 			}

@@ -14,6 +14,7 @@ import static game_content.GameWindow.*;
 
 public class GameFieldPanel extends JPanel {
 
+
     private AudioClip music = GameSound.getBattleMusicInstance();
     private GameWindow gameWindow;
     private GameField gameField;
@@ -50,6 +51,7 @@ public class GameFieldPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     if (!music.isPlaying() && !musicMute && !musicStop){
                         music = GameSound.getBattleMusicInstance();
+                        music.setVolume(GameSound.battleMusicVolume);
                         music.play();
                     }
                     checkMusicPlaying();
@@ -105,6 +107,7 @@ public class GameFieldPanel extends JPanel {
         gameField = new GameField(level, this);
         gameField.setBounds(0,0,624,624);
         add(gameField);
+        music.setVolume(GameSound.battleMusicVolume);
         music.play();
     }
 
@@ -258,6 +261,18 @@ public class GameFieldPanel extends JPanel {
     public void playerRespawnGained(){
         gameWindow.playerRespawnGained();
         numberOfRespawns.setText(gameWindow.getRespawns()+"x");
+    }
+
+    public void musicStop(){
+        musicStop=true;
+        music.stop();
+    }
+
+    public void musicPlay(){
+        musicStop=false;
+        music = GameSound.getBattleMusicInstance();
+        music.setVolume(GameSound.battleMusicVolume);
+        music.play();
     }
 
 

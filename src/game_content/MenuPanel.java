@@ -42,10 +42,11 @@ public class MenuPanel extends JPanel {
 
     }
 
-    private void playMusic(){
+    private void playMusic() {
         music = GameSound.getMenuMusicInstance();
+        music.setVolume(GameSound.menuMusicVolume);
         music.play();
-        music.isPlaying();
+
     }
 
     private void checkMusicPlaying(){
@@ -55,6 +56,7 @@ public class MenuPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     if (!music.isPlaying() && !musicStop){
                         music = GameSound.getMenuMusicInstance();
+                        music.setVolume(GameSound.menuMusicVolume);
                         music.play();
                     }
                     checkMusicPlaying();

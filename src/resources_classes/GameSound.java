@@ -6,6 +6,14 @@ import java.util.Random;
 
 public class GameSound{
 
+    /**
+     * double music volume from 0 to 1
+     */
+    public static final double battleMusicVolume = 0.7;
+    public static final double menuMusicVolume = 1;
+    public static final double explosionSoundVolume = 0.2;
+    public static final double boostSoundVolume = 1;
+
     public static final String[] battleMusicPath = {
             "resources/music/battle/jojo_op1_8bit.mp3",
             "resources/music/battle/jojo_op2_8bit.mp3",
@@ -52,5 +60,9 @@ public class GameSound{
     public static AudioClip getExplosionSoundInstance(){
         return new AudioClip(Paths.get("resources/music/sounds/explosion.wav").toUri().toString());
     }
+    public static AudioClip test(){
+        return new AudioClip(Paths.get("resources/music/sounds/boost.mp3").toUri().toString());
+    }
+
 
 }
