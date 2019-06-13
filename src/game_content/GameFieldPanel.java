@@ -255,5 +255,9 @@ public class GameFieldPanel extends JPanel {
         return gameWindow.getRespawns();
     }
 
+    public void playerRespawnGained(){
+        gameWindow.playerRespawnGained();
+    }
+
 
 }
