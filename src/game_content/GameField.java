@@ -27,7 +27,11 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Enemy count
 	 */
-	public static final int ENEMY_COUNT = 20;
+	public static final int ENEMY_COUNT = 40;
+	/**
+	 * Maximum number of enemies on screen
+	 */
+	public static final int MAX_ENEMIES = 10;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
@@ -85,7 +89,7 @@ public class GameField extends JPanel implements Runnable {
 		tanks = new LinkedList<>();
 		spawnPlayerTank();
 		bullets = new LinkedList<>();
-		spawnTimer = new Timer(4000, e -> {
+		spawnTimer = new Timer(2000, e -> {
 			spawnEnemyTank();
 		});
 		spawnTimer.start();
@@ -101,7 +105,7 @@ public class GameField extends JPanel implements Runnable {
 	private void spawnEnemyTank() {
 		int x, y = 0;
 		boolean tankSpawned = false;
-		if (tanks.size() < 7 && tankAmount < ENEMY_COUNT) {
+		if (tanks.size() < MAX_ENEMIES+1 && tankAmount < ENEMY_COUNT) {
 			while (!tankSpawned) {
 				int i = new Random().nextInt(3);
 				x = i * BYTE * 12;
