@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public abstract class Tank extends Movable implements Destructible {
 
 	private final static int SPEED = GameField.SCALE;
+	private int bulletSpeed = 2;
 	/**
 	 * Delay between bullets (in milliseconds)
 	 */
@@ -107,10 +108,14 @@ public abstract class Tank extends Movable implements Destructible {
 				break;
 		}
 		if (this instanceof EnemyTank)
-			bullets.add(new EnemyBullet(x, y, currentDir));
+			bullets.add(new EnemyBullet(x, y, currentDir,2));
 		else
-			bullets.add(new Bullet(x, y, currentDir));
+			bullets.add(new Bullet(x, y, currentDir,bulletSpeed));
 		bulletTimer = System.currentTimeMillis();
+	}
+
+	protected void setBulletSpeed(int bulletSpeed) {
+		this.bulletSpeed = bulletSpeed;
 	}
 
 	/**
@@ -124,4 +129,5 @@ public abstract class Tank extends Movable implements Destructible {
 		num = Math.round(num) * GameField.BYTE;
 		return (int) num;
 	}
+
 }

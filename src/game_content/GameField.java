@@ -3,6 +3,7 @@ package game_content;
 import game_objects.Destructible;
 import game_objects.map_objects.MapObject;
 import game_objects.map_objects.impassables.Base;
+import game_objects.map_objects.powerups.PowerUp;
 import game_objects.map_objects.turf.Explosion;
 import game_objects.movables.*;
 import map_tools.Level;
@@ -52,18 +53,22 @@ public class GameField extends JPanel implements Runnable {
 	 * How many frames it takes for tenth second to pass
 	 */
 	public static final int TENTH_OF_SECOND = 100 / DELAY;
+
 	private List<Explosion> explosions;
 	private List<Tank> tanks;
 	private List<Bullet> bullets;
+	private List<PowerUp> powerUps;
 	private Base base;
 	private Map map;
 	private PlayerTank playerTank;
-	private int tankAmount = 0;
+	private int tankAmount;
 
 	private Thread animator;
 	private GameFieldPanel gameFieldPanel;
 	private Timer endTimer;
-	private Timer spawnTimer;
+	private Timer timeStopTimer;
+	private Random rand;
+	private boolean timeStopped;
 
 	public GameField(Level level, GameFieldPanel gameFieldPanel) {
 		this.gameFieldPanel = gameFieldPanel;
@@ -88,8 +93,10 @@ public class GameField extends JPanel implements Runnable {
 		explosions = new LinkedList<>();
 		tanks = new LinkedList<>();
 		spawnPlayerTank();
+		rand = new Random();
 		bullets = new LinkedList<>();
-		spawnTimer = new Timer(2000, e -> {
+		powerUps = new LinkedList<>();
+		Timer spawnTimer = new Timer(2000, e -> {
 			spawnEnemyTank();
 		});
 		spawnTimer.start();
@@ -120,9 +127,7 @@ public class GameField extends JPanel implements Runnable {
 	}
 
 	private boolean noTankAt(int x, int y) {
-		System.out.println((x + "" + y));
 		for (Tank t : tanks) {
-			System.out.println(t.getBounds());
 			if (t.getBounds().intersects(x, y, 2 * BYTE, 2 * BYTE))
 				return false;
 		}
@@ -149,19 +154,49 @@ public class GameField extends JPanel implements Runnable {
 		checkWinCondtions();
 		checkAllTanksCollision();
 		updateBullets();
+		addPowerUps();
 		//Synchronizing drawing because of buffering
 		Toolkit.getDefaultToolkit().sync();
 	}
 
+	private void addPowerUps() {
+		if(rand.nextDouble() < 0.001)
+			powerUps.add(new PowerUp(rand.nextInt(25)*BYTE,rand.nextInt(25)*BYTE));
+		for(PowerUp p : powerUps) {
+			if (p.getBounds().intersects(playerTank.getBounds())) {
+				p.setVisible(false);
+				switch (p.getType()) {
+					case UPGRADE:
+						playerTank.upgrade();
+						break;
+					case HEALTH:
+						gameFieldPanel.playerRespawnGained();
+						break;
+					case TIME_STOP:
+						timeStopped = true;
+						timeStopTimer = new Timer(5000, e -> {
+							timeStopped = false;
+						});
+						timeStopTimer.start();
+						timeStopTimer.setRepeats(false);
+						break;
+				}
+			}
+		}
+
+	}
+
 	private void checkAllTanksCollision() {
 		for (Tank t : tanks) {
-			if(t instanceof EnemyTank) {
-				t.fire();
-				if (new Random().nextDouble() < 0.02)
-					t.changeDirection(Direction.values()[new Random().nextInt(Direction.values().length)]);
-			}
-			if (!checkWallCollisions(t) && !checkTankCollisions(t)) {
-				t.move();
+			if(! (t instanceof EnemyTank && timeStopped) ) {
+				if (t instanceof EnemyTank) {
+					t.fire();
+					if (rand.nextDouble() < 0.02)
+						t.changeDirection(Direction.values()[rand.nextInt(Direction.values().length)]);
+				}
+				if (!checkWallCollisions(t) && !checkTankCollisions(t)) {
+					t.move();
+				}
 			}
 		}
 	}
@@ -272,7 +307,16 @@ public class GameField extends JPanel implements Runnable {
 		drawTanks(g);
 		drawMapObjects(g);
 		drawBullets(g);
+		drawPowerUps(g);
 		drawExplosion(g);
+	}
+
+	private void drawPowerUps(Graphics g) {
+		powerUps.removeIf(powerUp -> !powerUp.isVisible());
+		for(PowerUp p: powerUps) {
+			if(p.isVisible())
+				g.drawImage(p.getImage(),p.getX(),p.getY(),this);
+		}
 	}
 
 	/**

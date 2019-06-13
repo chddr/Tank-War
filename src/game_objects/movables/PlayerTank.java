@@ -1,10 +1,13 @@
 package game_objects.movables;
 
+import game_content.GameField;
 import game_objects.Destructible;
 
 import java.awt.event.KeyEvent;
 
 public class PlayerTank extends Tank implements Destructible {
+
+	private int level = 1;
 
 	public PlayerTank(int x, int y, Direction dir) {
 		super(x, y, dir, 1500);
@@ -13,7 +16,7 @@ public class PlayerTank extends Tank implements Destructible {
 	}
 
 	private void init() {
-		loadImage("resources/sprites/player_tank/tank_%s.png");
+		loadImage("resources/sprites/player_tank/lvl1/tank_%s.png");
 		getImageDimensions();
 	}
 
@@ -29,4 +32,15 @@ public class PlayerTank extends Tank implements Destructible {
 		}
 	}
 
+	public void upgrade() {
+		level++;
+		if (level == 2) {
+			loadImage("resources/sprites/player_tank/lvl2/tank_%s.png");
+			setBulletSpeed(3);
+		} else if (level == 3) {
+			loadImage("resources/sprites/player_tank/lvl3/tank_%s.png");
+			setBulletSpeed(4 );
+		}
+
+	}
 }

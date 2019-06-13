@@ -9,28 +9,29 @@ public class Bullet extends Movable implements Destructible {
 	/**
 	 * Weird behaviour on big speeds, DON'T CHANGE
 	 */
-	private final static int SPEED = 3 * GameField.SCALE;
+	private int speed = GameField.SCALE;
 	public final static int WIDTH = 3 * GameField.SCALE;
 	public final static int HEIGHT = 4 * GameField.SCALE;
 
 	private Explosion explosion;
 
-	public Bullet(int x, int y, Direction dir) {
+	public Bullet(int x, int y, Direction dir, int speed) {
 		super(x, y, dir);
+		this.speed *= speed;
 
 		init();
 		switch (currentDir) {
 			case WEST:
-				dx = -SPEED;
+				dx = -this.speed;
 				break;
 			case EAST:
-				dx = SPEED;
+				dx = this.speed;
 				break;
 			case NORTH:
-				dy = -SPEED;
+				dy = -this.speed;
 				break;
 			case SOUTH:
-				dy = SPEED;
+				dy = this.speed;
 				break;
 		}
 	}
