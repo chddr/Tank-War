@@ -37,9 +37,11 @@ public class PlayerTank extends Tank implements Destructible {
 		if (level == 2) {
 			loadImage("resources/sprites/player_tank/lvl2/tank_%s.png");
 			setBulletSpeed(3);
+			setDelay(1000);
 		} else if (level == 3) {
 			loadImage("resources/sprites/player_tank/lvl3/tank_%s.png");
 			setBulletSpeed(4 );
+			setDelay(500);
 		}
 
 	}
