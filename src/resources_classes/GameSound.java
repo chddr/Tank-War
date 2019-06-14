@@ -60,8 +60,10 @@ public class GameSound{
     public static AudioClip getExplosionSoundInstance(){
         return new AudioClip(Paths.get("resources/music/sounds/explosion.wav").toUri().toString());
     }
-    public static AudioClip test(){
-        return new AudioClip(Paths.get("resources/music/sounds/boost.mp3").toUri().toString());
+    public static AudioClip getBoostSoundInstance(){
+        AudioClip audioClip = new AudioClip(Paths.get("resources/music/sounds/boost.mp3").toUri().toString());
+        audioClip.setVolume(boostSoundVolume);
+        return audioClip;
     }
 
 

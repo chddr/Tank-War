@@ -226,16 +226,6 @@ public class GameFieldPanel extends JPanel {
         if(respawns!=-1){
             numberOfRespawns.setText(respawns+"x");
         }
-//        else {
-//            Timer timer = new Timer(3000, new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    gameLost();
-//                }
-//            });
-//            timer.setRepeats(false);
-//            timer.start();
-//        }
 
     }
 
@@ -264,15 +254,15 @@ public class GameFieldPanel extends JPanel {
     }
 
     public void musicStop(){
-        musicStop=true;
+        musicMute=true;
         music.stop();
     }
 
     public void musicPlay(){
-        musicStop=false;
         music = GameSound.getBattleMusicInstance();
         music.setVolume(GameSound.battleMusicVolume);
         music.play();
+        musicMute=false;
     }
 
 

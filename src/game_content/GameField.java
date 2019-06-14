@@ -168,22 +168,23 @@ public class GameField extends JPanel implements Runnable {
 				p.setVisible(false);
 				switch (p.getType()) {
 					case UPGRADE:
-						GameSound.test().play();
+						GameSound.getBoostSoundInstance().play();
 						playerTank.upgrade();
 						break;
 					case HEALTH:
-						GameSound.test().play();
+						GameSound.getBoostSoundInstance().play();
 						gameFieldPanel.playerRespawnGained();
 						break;
 					case TIME_STOP:
 						Timer timer = new Timer(4000, new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								gameFieldPanel.musicStop();
+//								gameFieldPanel.musicStop();
 								timeStopped = true;
+								gameFieldPanel.requestFocusField();
 								timeStopTimer = new Timer(5000, k -> {
 									timeStopped = false;
-									gameFieldPanel.musicPlay();
+//									gameFieldPanel.musicPlay();
 								});
 								timeStopTimer.start();
 								timeStopTimer.setRepeats(false);
@@ -316,7 +317,6 @@ public class GameField extends JPanel implements Runnable {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
 		drawTanks(g);
 		drawMapObjects(g);
 		drawBullets(g);
