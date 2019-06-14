@@ -24,10 +24,10 @@ public class GameFieldPanel extends JPanel {
     private Level level;
     private boolean musicMute;
     private boolean musicStop;
+    private JButton muteButton;
     private Image mutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/mute_button.png",50,50);
     private Image unmutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/unmute_button.png",50,50);
 
-    //Level.values()[Level.Two.ordinal()+1]
     public GameFieldPanel(GameWindow gameWindow, Level level){
         this.gameWindow = gameWindow;
         this.level = level;
@@ -113,7 +113,7 @@ public class GameFieldPanel extends JPanel {
 
     private void addMuteButton(){
 
-        JButton muteButton = new JButton(new ImageIcon(unmutedImage));
+        muteButton = new JButton(new ImageIcon(unmutedImage));
         muteButton.setBounds(640,540,50,50);
         muteButton.setBackground(Color.DARK_GRAY);
         muteButton.setBorderPainted(false);
@@ -170,6 +170,7 @@ public class GameFieldPanel extends JPanel {
         }
 
         gameWindow.remove(this);
+        this.setVisible(false);
         LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+2);
 
         Timer timer = new Timer(1000, new ActionListener() {
@@ -254,6 +255,8 @@ public class GameFieldPanel extends JPanel {
     }
 
     public void musicStop(){
+        muteButton.setIcon(new ImageIcon(mutedImage));
+        requestFocusField();
         musicMute=true;
         music.stop();
     }
@@ -261,7 +264,9 @@ public class GameFieldPanel extends JPanel {
     public void musicPlay(){
         music = GameSound.getBattleMusicInstance();
         music.setVolume(GameSound.battleMusicVolume);
+        muteButton.setIcon(new ImageIcon(unmutedImage));
         music.play();
+        requestFocusField();
         musicMute=false;
     }
 
