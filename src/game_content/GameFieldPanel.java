@@ -51,7 +51,6 @@ public class GameFieldPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     if (!music.isPlaying() && !musicMute && !musicStop){
                         music = GameSound.getBattleMusicInstance();
-                        music.setVolume(GameSound.battleMusicVolume);
                         music.play();
                     }
                     checkMusicPlaying();
@@ -170,6 +169,7 @@ public class GameFieldPanel extends JPanel {
         }
 
         gameWindow.remove(this);
+        gameField.getAnimator().stop();
         this.setVisible(false);
         LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+2);
 
@@ -201,6 +201,7 @@ public class GameFieldPanel extends JPanel {
 
     private void gameEnd(int gameResult){
         gameWindow.remove(this);
+        gameField.getAnimator().stop();
         musicStop=true;
         music.stop();
         LoadScreenPanel loadScreenPanel = new LoadScreenPanel(gameResult);
@@ -262,8 +263,8 @@ public class GameFieldPanel extends JPanel {
     }
 
     public void musicPlay(){
+        music.stop();
         music = GameSound.getBattleMusicInstance();
-        music.setVolume(GameSound.battleMusicVolume);
         muteButton.setIcon(new ImageIcon(unmutedImage));
         music.play();
         requestFocusField();

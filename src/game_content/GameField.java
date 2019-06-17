@@ -183,14 +183,12 @@ public class GameField extends JPanel implements Runnable {
 								timeStopped = true;
 								gameFieldPanel.requestFocusField();
 								timeStopTimer = new Timer(5000, k -> {
-									if(gameFieldPanel.isVisible()){
-										timeStopped = false;
-										if (!gameFieldPanel.isVisible()){
-											Thread.currentThread().stop();
-											return;
-										}
-										gameFieldPanel.musicPlay();
+									if(!gameFieldPanel.isVisible()){
+										animator.stop();
+										return;
 									}
+									timeStopped = false;
+									gameFieldPanel.musicPlay();
 								});
 								timeStopTimer.start();
 								timeStopTimer.setRepeats(false);
@@ -270,7 +268,7 @@ public class GameField extends JPanel implements Runnable {
 		if (base.isDefeated() && endTimer == null) {
 			endTimer = new Timer(1000, e -> {
 				gameFieldPanel.gameLost();
-				Thread.currentThread().stop();
+				animator.stop();
 			});
 			endTimer.setRepeats(false);
 			endTimer.start();
@@ -458,5 +456,9 @@ public class GameField extends JPanel implements Runnable {
 		public void keyReleased(KeyEvent e) {
 			playerTank.keyReleased(e);
 		}
+	}
+
+	public Thread getAnimator() {
+		return animator;
 	}
 }

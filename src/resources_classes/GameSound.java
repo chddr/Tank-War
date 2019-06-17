@@ -13,6 +13,7 @@ public class GameSound{
     public static final double menuMusicVolume = 1;
     public static final double explosionSoundVolume = 0.2;
     public static final double boostSoundVolume = 1;
+    public static final double stopTimeSoundVolume = 1;
 
     public static final String[] battleMusicPath = {
             "resources/music/battle/jojo_op1_8bit.mp3",
@@ -41,7 +42,9 @@ public class GameSound{
             nextMusic = menuMusicPath[random.nextInt(menuMusicPath.length)];
         } while (nextMusic.equals(lastMenuMusic));
         lastMenuMusic = nextMusic;
-        return new AudioClip(Paths.get(nextMusic).toUri().toString());
+        AudioClip music = new AudioClip(Paths.get(nextMusic).toUri().toString());
+        music.setVolume(menuMusicVolume);
+        return music;
     }
 
     public static AudioClip getBattleMusicInstance(){
@@ -50,15 +53,21 @@ public class GameSound{
             nextMusic = battleMusicPath[random.nextInt(battleMusicPath.length)];
         } while (nextMusic.equals(lastBattleMusic));
         lastBattleMusic = nextMusic;
-        return new AudioClip(Paths.get(nextMusic).toUri().toString());
+        AudioClip music = new AudioClip(Paths.get(nextMusic).toUri().toString());
+        music.setVolume(battleMusicVolume);
+        return music;
     }
 
     public static AudioClip getStopTimeSoundInstance(){
-        return new AudioClip(Paths.get("resources/music/sounds/ZA_WARUDO.mp3").toUri().toString());
+        AudioClip audioClip = new AudioClip(Paths.get("resources/music/sounds/ZA_WARUDO.mp3").toUri().toString());
+        audioClip.setVolume(stopTimeSoundVolume);
+        return audioClip;
     }
 
     public static AudioClip getExplosionSoundInstance(){
-        return new AudioClip(Paths.get("resources/music/sounds/explosion.wav").toUri().toString());
+        AudioClip audioClip = new AudioClip(Paths.get("resources/music/sounds/explosion.wav").toUri().toString());
+        audioClip.setVolume(explosionSoundVolume);
+        return audioClip;
     }
     public static AudioClip getBoostSoundInstance(){
         AudioClip audioClip = new AudioClip(Paths.get("resources/music/sounds/boost.mp3").toUri().toString());
