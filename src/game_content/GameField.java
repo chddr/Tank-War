@@ -19,6 +19,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameField extends JPanel implements Runnable {
 
@@ -55,10 +56,10 @@ public class GameField extends JPanel implements Runnable {
 	 */
 	public static final int TENTH_OF_SECOND = 100 / DELAY;
 
-	private List<Explosion> explosions;
-	private List<Tank> tanks;
-	private List<Bullet> bullets;
-	private List<PowerUp> powerUps;
+	private Set<Explosion> explosions;
+	private Set<Tank> tanks;
+	private Set<Bullet> bullets;
+	private Set<PowerUp> powerUps;
 	private Base base;
 	private Map map;
 	private PlayerTank playerTank;
@@ -91,12 +92,12 @@ public class GameField extends JPanel implements Runnable {
 		addKeyListener(new Adapter());
 		map = Map.getLevelMap(level);
 		base = map.getBase();
-		explosions = new LinkedList<>();
-		tanks = new LinkedList<>();
+		explosions = ConcurrentHashMap.newKeySet();
+		tanks = ConcurrentHashMap.newKeySet();
 		spawnPlayerTank();
 		rand = new Random();
-		bullets = new LinkedList<>();
-		powerUps = new LinkedList<>();
+		bullets = ConcurrentHashMap.newKeySet();
+		powerUps = ConcurrentHashMap.newKeySet();
 		Timer spawnTimer = new Timer(2000, e -> {
 			spawnEnemyTank();
 		});
@@ -272,10 +273,10 @@ public class GameField extends JPanel implements Runnable {
 	}
 
 	private void updateBullets() {
-		bullets = new LinkedList<>();
 		for (Tank t : tanks) {
 			t.getBullets().removeIf(bullet -> !bullet.isVisible());
 			bullets.addAll(t.getBullets());
+			bullets.removeIf(bullet -> !bullet.isVisible());
 		}
 		for (Bullet b : bullets) {
 			Rectangle bBounds = b.getTheoreticalBounds();
