@@ -118,6 +118,10 @@ public abstract class Tank extends Movable implements Destructible {
 		this.bulletSpeed = bulletSpeed;
 	}
 
+	public void setDelay(int delay) {
+		this.delay = delay;
+	}
+
 	/**
 	 * Rounds the coordinate so it fits into the game grid
 	 *
