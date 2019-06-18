@@ -32,7 +32,7 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Enemy count
 	 */
-	public static final int ENEMY_COUNT = 40;
+	public static final int ENEMY_COUNT = 32;
 	/**
 	 * Maximum number of enemies on screen
 	 */
