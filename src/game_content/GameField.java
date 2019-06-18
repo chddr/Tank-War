@@ -6,6 +6,8 @@ import game_objects.map_objects.impassables.Base;
 import game_objects.map_objects.powerups.PowerUp;
 import game_objects.map_objects.turf.Explosion;
 import game_objects.movables.*;
+import javafx.scene.media.AudioClip;
+import jdk.internal.util.xml.impl.Pair;
 import map_tools.Level;
 import map_tools.Map;
 import resources_classes.GameSound;
@@ -19,6 +21,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameField extends JPanel implements Runnable {
 
@@ -33,7 +36,7 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Maximum number of enemies on screen
 	 */
-	public static final int MAX_ENEMIES = 10;
+	public static final int MAX_ENEMIES = 8;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
@@ -55,10 +58,10 @@ public class GameField extends JPanel implements Runnable {
 	 */
 	public static final int TENTH_OF_SECOND = 100 / DELAY;
 
-	private List<Explosion> explosions;
-	private List<Tank> tanks;
-	private List<Bullet> bullets;
-	private List<PowerUp> powerUps;
+	private Set<Explosion> explosions;
+	private Set<Tank> tanks;
+	private Set<Bullet> bullets;
+	private Set<PowerUp> powerUps;
 	private Base base;
 	private Map map;
 	private PlayerTank playerTank;
@@ -70,6 +73,7 @@ public class GameField extends JPanel implements Runnable {
 	private Timer timeStopTimer;
 	private Random rand;
 	private boolean timeStopped;
+	private AudioClip[] timeStoppedSounds = new AudioClip[2];
 
 	public GameField(Level level, GameFieldPanel gameFieldPanel) {
 		this.gameFieldPanel = gameFieldPanel;
@@ -91,12 +95,12 @@ public class GameField extends JPanel implements Runnable {
 		addKeyListener(new Adapter());
 		map = Map.getLevelMap(level);
 		base = map.getBase();
-		explosions = new LinkedList<>();
-		tanks = new LinkedList<>();
+		explosions = ConcurrentHashMap.newKeySet();
+		tanks = ConcurrentHashMap.newKeySet();
 		spawnPlayerTank();
 		rand = new Random();
-		bullets = new LinkedList<>();
-		powerUps = new LinkedList<>();
+		bullets = ConcurrentHashMap.newKeySet();
+		powerUps = ConcurrentHashMap.newKeySet();
 		Timer spawnTimer = new Timer(2000, e -> {
 			spawnEnemyTank();
 		});
@@ -176,28 +180,50 @@ public class GameField extends JPanel implements Runnable {
 						gameFieldPanel.playerRespawnGained();
 						break;
 					case TIME_STOP:
-						Timer timer = new Timer(4000, new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-//								gameFieldPanel.musicStop();
-								timeStopped = true;
-								gameFieldPanel.requestFocusField();
-								timeStopTimer = new Timer(5000, k -> {
-									timeStopped = false;
-//									gameFieldPanel.musicPlay();
-								});
-								timeStopTimer.start();
-								timeStopTimer.setRepeats(false);
-							}
-						});
-						timer.setRepeats(false);
-						timer.start();
-						GameSound.getStopTimeSoundInstance().play();
+						stopTime();
 						break;
 				}
 			}
 		}
 
+	}
+
+	private void stopTime(){
+		Timer timer = new Timer(4000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameFieldPanel.musicStop();
+				if(!gameFieldPanel.isVisible()){
+					animator.interrupt();
+					return;
+				}
+				GameSound.stopTimeSound[1].stop();
+				GameSound.stopTimeSound[1].play();
+				timeStopped = true;
+				gameFieldPanel.requestFocusField();
+				if (timeStopTimer != null) {
+					timeStopTimer.stop();
+				}
+				timeStopTimer = new Timer(5700, k -> {
+					if(!gameFieldPanel.isVisible()){
+						animator.interrupt();
+						return;
+					}
+					timeStopped = false;
+					gameFieldPanel.musicPlay();
+				});
+				timeStopTimer.start();
+				timeStopTimer.setRepeats(false);
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+		GameSound.stopTimeSound[1].stop();
+		GameSound.stopTimeSound[0].play();
+	}
+
+	public void interrupt() {
+		animator.interrupt();
 	}
 
 	private void checkAllTanksCollision() {
@@ -210,6 +236,12 @@ public class GameField extends JPanel implements Runnable {
 				}
 				if (!checkWallCollisions(t) && !checkTankCollisions(t)) {
 					t.move();
+				} else if(t instanceof EnemyTank){
+					for (int i = 0; i < 8; i++) {
+						t.changeDirection(Direction.values()[rand.nextInt(Direction.values().length)]);
+						if(!checkWallCollisions(t) && !checkTankCollisions(t))
+							break;
+					}
 				}
 			}
 		}
@@ -217,7 +249,6 @@ public class GameField extends JPanel implements Runnable {
 
 	private void checkTankRespawns(){
 		if (!playerTank.isVisible() && endTimer==null) {
-
 			gameFieldPanel.playerTankDestroyed();
 			if (gameFieldPanel.getRespawns()!=-1){
 				spawnPlayerTank();
@@ -225,6 +256,7 @@ public class GameField extends JPanel implements Runnable {
 				endTimer = new Timer(3000, new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
+						animator.interrupt();
 						gameFieldPanel.gameLost();
 					}
 				});
@@ -264,7 +296,7 @@ public class GameField extends JPanel implements Runnable {
 		if (base.isDefeated() && endTimer == null) {
 			endTimer = new Timer(1000, e -> {
 				gameFieldPanel.gameLost();
-				Thread.currentThread().stop();
+				animator.interrupt();
 			});
 			endTimer.setRepeats(false);
 			endTimer.start();
@@ -272,10 +304,10 @@ public class GameField extends JPanel implements Runnable {
 	}
 
 	private void updateBullets() {
-		bullets = new LinkedList<>();
 		for (Tank t : tanks) {
 			t.getBullets().removeIf(bullet -> !bullet.isVisible());
 			bullets.addAll(t.getBullets());
+			bullets.removeIf(bullet -> !bullet.isVisible());
 		}
 		for (Bullet b : bullets) {
 			Rectangle bBounds = b.getTheoreticalBounds();
@@ -391,30 +423,32 @@ public class GameField extends JPanel implements Runnable {
 	@Override
 	public void run() {
 
+
 		long beforeTime, timeDiff, sleep;
 
 		beforeTime = System.currentTimeMillis();
 
-		while (true) {
-
+		while (!Thread.currentThread().isInterrupted()) {
+			System.out.println("shit");
+			try {
 			cycle();
 			repaint();
 
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleep = DELAY - timeDiff;
 
-			if (sleep < 0) {
+			if (sleep < 0)
 				sleep = 2;
-			}
 
-			try {
-				Thread.sleep(sleep);
+			Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 
-				String msg = String.format("Thread interrupted: %s", e.getMessage());
-
-				JOptionPane.showMessageDialog(this, msg, "Error",
-						JOptionPane.ERROR_MESSAGE);
+//				String msg = String.format("Thread interrupted: %s", e.getMessage());
+//
+//				JOptionPane.showMessageDialog(this, msg, "Error",
+//						JOptionPane.ERROR_MESSAGE);
+				Thread.currentThread().interrupt();
+				return;
 			}
 
 			beforeTime = System.currentTimeMillis();
@@ -452,5 +486,9 @@ public class GameField extends JPanel implements Runnable {
 		public void keyReleased(KeyEvent e) {
 			playerTank.keyReleased(e);
 		}
+	}
+
+	public Thread getAnimator() {
+		return animator;
 	}
 }

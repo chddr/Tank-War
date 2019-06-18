@@ -15,7 +15,7 @@ import static game_content.GameWindow.*;
 public class GameFieldPanel extends JPanel {
 
 
-    private AudioClip music = GameSound.getBattleMusicInstance();
+    private AudioClip music = GameSound.nextBattleMusic();
     private GameWindow gameWindow;
     private GameField gameField;
     private JLabel numberOfRespawns;
@@ -24,10 +24,10 @@ public class GameFieldPanel extends JPanel {
     private Level level;
     private boolean musicMute;
     private boolean musicStop;
+    private JButton muteButton;
     private Image mutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/mute_button.png",50,50);
     private Image unmutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/unmute_button.png",50,50);
 
-    //Level.values()[Level.Two.ordinal()+1]
     public GameFieldPanel(GameWindow gameWindow, Level level){
         this.gameWindow = gameWindow;
         this.level = level;
@@ -50,8 +50,7 @@ public class GameFieldPanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!music.isPlaying() && !musicMute && !musicStop){
-                        music = GameSound.getBattleMusicInstance();
-                        music.setVolume(GameSound.battleMusicVolume);
+                        music = GameSound.nextBattleMusic();
                         music.play();
                     }
                     checkMusicPlaying();
@@ -113,7 +112,7 @@ public class GameFieldPanel extends JPanel {
 
     private void addMuteButton(){
 
-        JButton muteButton = new JButton(new ImageIcon(unmutedImage));
+        muteButton = new JButton(new ImageIcon(unmutedImage));
         muteButton.setBounds(640,540,50,50);
         muteButton.setBackground(Color.DARK_GRAY);
         muteButton.setBorderPainted(false);
@@ -145,12 +144,13 @@ public class GameFieldPanel extends JPanel {
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                musicStop=true;
-//                music.stop();
-//                gameWindow.remove(GameFieldPanel.this);
-//                gameWindow.add(new MenuPanel(gameWindow));
-//                gameWindow.repaint();
-                roundWon();
+                musicStop=true;
+                music.stop();
+                gameWindow.remove(GameFieldPanel.this);
+                gameField.interrupt();
+                gameWindow.setRespawns(3);
+                gameWindow.add(new MenuPanel(gameWindow));
+                gameWindow.repaint();
 
             }
         });
@@ -170,6 +170,8 @@ public class GameFieldPanel extends JPanel {
         }
 
         gameWindow.remove(this);
+        gameField.getAnimator().stop();
+        this.setVisible(false);
         LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+2);
 
         Timer timer = new Timer(1000, new ActionListener() {
@@ -188,34 +190,22 @@ public class GameFieldPanel extends JPanel {
         gameWindow.repaint();
     }
 
-    //LoadScreen parameter -1 means defeat screen
     public void gameLost(){
-        gameEnd(-1);
+        gameEnd(false);
     }
 
-    //LoadScreen parameter 0 means win screen
     private void gameWon(){
-        gameEnd(0);
+        gameEnd(true);
     }
 
-    private void gameEnd(int gameResult){
+    private void gameEnd(boolean gameResult){
+        setVisible(false);
         gameWindow.remove(this);
+        gameField.interrupt();
         musicStop=true;
         music.stop();
-        LoadScreenPanel loadScreenPanel = new LoadScreenPanel(gameResult);
-
-        Timer timer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameWindow.remove(loadScreenPanel);
-                gameWindow.add(new MenuPanel(gameWindow));
-                gameWindow.setRespawns(3);
-                gameWindow.repaint();
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
-        gameWindow.add(loadScreenPanel);
+        GameEndPanel gameEndPanel = new GameEndPanel(gameWindow, gameResult, level.ordinal()*GameField.ENEMY_COUNT+enemyTanksDestroyed);
+        gameWindow.add(gameEndPanel);
         gameWindow.repaint();
 
     }
@@ -254,14 +244,19 @@ public class GameFieldPanel extends JPanel {
     }
 
     public void musicStop(){
+        muteButton.setIcon(new ImageIcon(mutedImage));
+        requestFocusField();
         musicMute=true;
         music.stop();
     }
 
     public void musicPlay(){
-        music = GameSound.getBattleMusicInstance();
-        music.setVolume(GameSound.battleMusicVolume);
-        music.play();
+        music.stop();
+        music = GameSound.nextBattleMusic();
+        muteButton.setIcon(new ImageIcon(unmutedImage));
+        if(isVisible())
+            music.play();
+        requestFocusField();
         musicMute=false;
     }
 

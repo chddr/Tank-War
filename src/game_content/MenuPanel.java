@@ -43,8 +43,7 @@ public class MenuPanel extends JPanel {
     }
 
     private void playMusic() {
-        music = GameSound.getMenuMusicInstance();
-        music.setVolume(GameSound.menuMusicVolume);
+        music = GameSound.nextMenuMusic();
         music.play();
 
     }
@@ -55,8 +54,7 @@ public class MenuPanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!music.isPlaying() && !musicStop){
-                        music = GameSound.getMenuMusicInstance();
-                        music.setVolume(GameSound.menuMusicVolume);
+                        music = GameSound.nextMenuMusic();
                         music.play();
                     }
                     checkMusicPlaying();
@@ -91,7 +89,7 @@ public class MenuPanel extends JPanel {
             Level level = (Level)levelsBox.getSelectedItem();
             LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+1);
 
-            Timer timer = new Timer(0, new ActionListener() {
+            Timer timer = new Timer(1000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     gameWindow.remove(loadScreenPanel);
@@ -112,7 +110,7 @@ public class MenuPanel extends JPanel {
     private void addLevelsComboBoc(){
         levelsBox = new JComboBox();
         levelsBox.setRenderer(new CustomComboBoxCellRenderer());
-        levelsBox.setFont(new Font(fontName,0,40));
+        levelsBox.setFont(new Font(fontName,0,37));
         levelsBox.setForeground(Color.BLACK);
         levelsBox.setBackground(new Color(172,17,21));
         levelsBox.setBounds(250,500,300,80);
@@ -142,7 +140,7 @@ public class MenuPanel extends JPanel {
             label.setText(String.valueOf(value));
             label.setHorizontalAlignment(SwingConstants.CENTER);
             label.setVerticalAlignment(SwingConstants.BOTTOM);
-            label.setFont(new Font(fontName,0,40));
+            label.setFont(new Font(fontName,0,37));
             label.setForeground(Color.BLACK);
 
             return label;
