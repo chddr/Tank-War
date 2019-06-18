@@ -36,7 +36,7 @@ public class GameField extends JPanel implements Runnable {
 	/**
 	 * Maximum number of enemies on screen
 	 */
-	public static final int MAX_ENEMIES = 10;
+	public static final int MAX_ENEMIES = 8;
 	/**
 	 * Size of the game map relative to the tile size. Actually its twice as small relative to the Tank because every map tile is divided into four destructible parts
 	 */
@@ -232,6 +232,12 @@ public class GameField extends JPanel implements Runnable {
 				}
 				if (!checkWallCollisions(t) && !checkTankCollisions(t)) {
 					t.move();
+				} else if(t instanceof EnemyTank){
+					for (int i = 0; i < 8; i++) {
+						t.changeDirection(Direction.values()[rand.nextInt(Direction.values().length)]);
+						if(!checkWallCollisions(t) && !checkTankCollisions(t))
+							break;
+					}
 				}
 			}
 		}

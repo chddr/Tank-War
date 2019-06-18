@@ -8,7 +8,7 @@ import game_objects.map_objects.impassables.SteelWall;
 import game_objects.map_objects.turf.Cover;
 import game_objects.map_objects.turf.Water;
 
-import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Map Object that simply extends ArrayList with MapObjects
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * 3 - water
  * 4 - grass(?) cover
  */
-public class Map extends ArrayList<MapObject> {
+public class Map extends ConcurrentLinkedQueue<MapObject> {
 
     private Base base;
 
@@ -56,6 +56,7 @@ public class Map extends ArrayList<MapObject> {
         base = new Base(12 * GameField.BYTE, 24 * GameField.BYTE);
         add(base);
     }
+
 
     /**
      * Pre-made levels that match enums
@@ -361,7 +362,6 @@ public class Map extends ArrayList<MapObject> {
                                         {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
                                 };
                 break;
-
         }
         return new Map(map);
     }
