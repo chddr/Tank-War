@@ -32,7 +32,7 @@ public class GameSound{
             new AudioClip(Paths.get("resources/music/menu/six_days_war.mp3").toUri().toString()),
             new AudioClip(Paths.get("resources/music/menu/paint_it_black.mp3").toUri().toString()),
             new AudioClip(Paths.get("resources/music/menu/i'm nuclear.mp3").toUri().toString()),
-            new AudioClip(Paths.get("resources/music/menu/waste_land.mp3").toUri().toString()),
+            new AudioClip(Paths.get("resources/music/menu/the_real_folk_blues.mp3").toUri().toString()),
             new AudioClip(Paths.get("resources/music/menu/2+2.mp3").toUri().toString())
     };
 
@@ -91,7 +91,7 @@ public class GameSound{
         return audioClip;
     }
     public static AudioClip getDefeatMusicInstance(){
-        AudioClip audioClip = new AudioClip(Paths.get("resources/music/game_end/the_real_folk_blues.mp3").toUri().toString());
+        AudioClip audioClip = new AudioClip(Paths.get("resources/music/game_end/waste_land.mp3").toUri().toString());
         audioClip.setVolume(1);
         return audioClip;
     }

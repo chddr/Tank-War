@@ -114,7 +114,7 @@ public class GameFieldPanel extends JPanel {
         flag.setBounds(710, 380, 100, 100);
         add(flag);
         JLabel number = new JLabel(level.ordinal()+1+"x");
-        number.setFont(new Font(fontName,0,40));
+        number.setFont(new Font(fontName,0,32));
         number.setForeground(Color.WHITE);
         number.setBounds(635, 400, 100, 100);
         add(number);

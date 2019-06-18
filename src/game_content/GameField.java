@@ -429,7 +429,6 @@ public class GameField extends JPanel implements Runnable {
 		beforeTime = System.currentTimeMillis();
 
 		while (!Thread.currentThread().isInterrupted()) {
-			System.out.println("shit");
 			try {
 			cycle();
 			repaint();
@@ -442,11 +441,6 @@ public class GameField extends JPanel implements Runnable {
 
 			Thread.sleep(sleep);
 			} catch (InterruptedException e) {
-
-//				String msg = String.format("Thread interrupted: %s", e.getMessage());
-//
-//				JOptionPane.showMessageDialog(this, msg, "Error",
-//						JOptionPane.ERROR_MESSAGE);
 				Thread.currentThread().interrupt();
 				return;
 			}
