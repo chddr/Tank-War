@@ -15,7 +15,7 @@ import static game_content.GameWindow.*;
 public class GameFieldPanel extends JPanel {
 
 
-    private AudioClip music = GameSound.getBattleMusicInstance();
+    private AudioClip music = GameSound.nextBattleMusic();
     private GameWindow gameWindow;
     private GameField gameField;
     private JLabel numberOfRespawns;
@@ -50,7 +50,7 @@ public class GameFieldPanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!music.isPlaying() && !musicMute && !musicStop){
-                        music = GameSound.getBattleMusicInstance();
+                        music = GameSound.nextBattleMusic();
                         music.play();
                     }
                     checkMusicPlaying();
@@ -144,12 +144,12 @@ public class GameFieldPanel extends JPanel {
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                musicStop=true;
-//                music.stop();
-//                gameWindow.remove(GameFieldPanel.this);
-//                gameWindow.add(new MenuPanel(gameWindow));
-//                gameWindow.repaint();
-                roundWon();
+                musicStop=true;
+                music.stop();
+                gameWindow.remove(GameFieldPanel.this);
+                gameWindow.add(new MenuPanel(gameWindow));
+                gameWindow.repaint();
+//                roundWon();
 
             }
         });
@@ -189,35 +189,22 @@ public class GameFieldPanel extends JPanel {
         gameWindow.repaint();
     }
 
-    //LoadScreen parameter -1 means defeat screen
     public void gameLost(){
-        gameEnd(-1);
+        gameEnd(false);
     }
 
-    //LoadScreen parameter 0 means win screen
     private void gameWon(){
-        gameEnd(0);
+        gameEnd(true);
     }
 
-    private void gameEnd(int gameResult){
+    private void gameEnd(boolean gameResult){
+        setVisible(false);
         gameWindow.remove(this);
         gameField.getAnimator().stop();
         musicStop=true;
         music.stop();
-        LoadScreenPanel loadScreenPanel = new LoadScreenPanel(gameResult);
-
-        Timer timer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameWindow.remove(loadScreenPanel);
-                gameWindow.add(new MenuPanel(gameWindow));
-                gameWindow.setRespawns(3);
-                gameWindow.repaint();
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
-        gameWindow.add(loadScreenPanel);
+        GameEndPanel gameEndPanel = new GameEndPanel(gameWindow, gameResult, level.ordinal()*GameField.ENEMY_COUNT+enemyTanksDestroyed);
+        gameWindow.add(gameEndPanel);
         gameWindow.repaint();
 
     }
@@ -264,9 +251,10 @@ public class GameFieldPanel extends JPanel {
 
     public void musicPlay(){
         music.stop();
-        music = GameSound.getBattleMusicInstance();
+        music = GameSound.nextBattleMusic();
         muteButton.setIcon(new ImageIcon(unmutedImage));
-        music.play();
+        if(isVisible())
+            music.play();
         requestFocusField();
         musicMute=false;
     }

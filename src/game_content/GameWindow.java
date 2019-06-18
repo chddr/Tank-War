@@ -1,14 +1,6 @@
 package game_content;
 
-
-import javafx.scene.media.AudioClip;
-import map_tools.Level;
-import resources_classes.GameSound;
-import resources_classes.ScaledImage;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.*;
 
@@ -17,7 +9,6 @@ public class GameWindow extends JFrame {
 	public static final int windowWidth = 800;
 	public static final int windowHeight = 660;
 	public static final String fontName = "cootuecursessquare16x16";
-	private AudioClip music;
 	private int respawns = 3;
 
 	public GameWindow() {

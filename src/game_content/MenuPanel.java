@@ -43,8 +43,7 @@ public class MenuPanel extends JPanel {
     }
 
     private void playMusic() {
-        music = GameSound.getMenuMusicInstance();
-        music.setVolume(GameSound.menuMusicVolume);
+        music = GameSound.nextMenuMusic();
         music.play();
 
     }
@@ -55,8 +54,7 @@ public class MenuPanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!music.isPlaying() && !musicStop){
-                        music = GameSound.getMenuMusicInstance();
-                        music.setVolume(GameSound.menuMusicVolume);
+                        music = GameSound.nextMenuMusic();
                         music.play();
                     }
                     checkMusicPlaying();
@@ -91,7 +89,7 @@ public class MenuPanel extends JPanel {
             Level level = (Level)levelsBox.getSelectedItem();
             LoadScreenPanel loadScreenPanel = new LoadScreenPanel(level.ordinal()+1);
 
-            Timer timer = new Timer(0, new ActionListener() {
+            Timer timer = new Timer(1000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     gameWindow.remove(loadScreenPanel);

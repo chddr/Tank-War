@@ -6,6 +6,8 @@ import game_objects.map_objects.impassables.Base;
 import game_objects.map_objects.powerups.PowerUp;
 import game_objects.map_objects.turf.Explosion;
 import game_objects.movables.*;
+import javafx.scene.media.AudioClip;
+import jdk.internal.util.xml.impl.Pair;
 import map_tools.Level;
 import map_tools.Map;
 import resources_classes.GameSound;
@@ -71,6 +73,7 @@ public class GameField extends JPanel implements Runnable {
 	private Timer timeStopTimer;
 	private Random rand;
 	private boolean timeStopped;
+	private AudioClip[] timeStoppedSounds = new AudioClip[2];
 
 	public GameField(Level level, GameFieldPanel gameFieldPanel) {
 		this.gameFieldPanel = gameFieldPanel;
@@ -177,32 +180,46 @@ public class GameField extends JPanel implements Runnable {
 						gameFieldPanel.playerRespawnGained();
 						break;
 					case TIME_STOP:
-						Timer timer = new Timer(4000, new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								gameFieldPanel.musicStop();
-								timeStopped = true;
-								gameFieldPanel.requestFocusField();
-								timeStopTimer = new Timer(5000, k -> {
-									if(!gameFieldPanel.isVisible()){
-										animator.stop();
-										return;
-									}
-									timeStopped = false;
-									gameFieldPanel.musicPlay();
-								});
-								timeStopTimer.start();
-								timeStopTimer.setRepeats(false);
-							}
-						});
-						timer.setRepeats(false);
-						timer.start();
-						GameSound.getStopTimeSoundInstance().play();
+						stopTime();
 						break;
 				}
 			}
 		}
 
+	}
+
+	private void stopTime(){
+		Timer timer = new Timer(4000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameFieldPanel.musicStop();
+				if(!gameFieldPanel.isVisible()){
+					animator.stop();
+					return;
+				}
+				GameSound.stopTimeSound[1].stop();
+				GameSound.stopTimeSound[1].play();
+				timeStopped = true;
+				gameFieldPanel.requestFocusField();
+				if (timeStopTimer != null) {
+					timeStopTimer.stop();
+				}
+				timeStopTimer = new Timer(5700, k -> {
+					if(!gameFieldPanel.isVisible()){
+						animator.stop();
+						return;
+					}
+					timeStopped = false;
+					gameFieldPanel.musicPlay();
+				});
+				timeStopTimer.start();
+				timeStopTimer.setRepeats(false);
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+		GameSound.stopTimeSound[1].stop();
+		GameSound.stopTimeSound[0].play();
 	}
 
 	private void checkAllTanksCollision() {
