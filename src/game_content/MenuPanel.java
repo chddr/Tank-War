@@ -110,7 +110,7 @@ public class MenuPanel extends JPanel {
     private void addLevelsComboBoc(){
         levelsBox = new JComboBox();
         levelsBox.setRenderer(new CustomComboBoxCellRenderer());
-        levelsBox.setFont(new Font(fontName,0,40));
+        levelsBox.setFont(new Font(fontName,0,37));
         levelsBox.setForeground(Color.BLACK);
         levelsBox.setBackground(new Color(172,17,21));
         levelsBox.setBounds(250,500,300,80);
@@ -140,7 +140,7 @@ public class MenuPanel extends JPanel {
             label.setText(String.valueOf(value));
             label.setHorizontalAlignment(SwingConstants.CENTER);
             label.setVerticalAlignment(SwingConstants.BOTTOM);
-            label.setFont(new Font(fontName,0,40));
+            label.setFont(new Font(fontName,0,37));
             label.setForeground(Color.BLACK);
 
             return label;
