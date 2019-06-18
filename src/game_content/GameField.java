@@ -194,7 +194,7 @@ public class GameField extends JPanel implements Runnable {
 			public void actionPerformed(ActionEvent e) {
 				gameFieldPanel.musicStop();
 				if(!gameFieldPanel.isVisible()){
-					animator.stop();
+					animator.interrupt();
 					return;
 				}
 				GameSound.stopTimeSound[1].stop();
@@ -206,7 +206,7 @@ public class GameField extends JPanel implements Runnable {
 				}
 				timeStopTimer = new Timer(5700, k -> {
 					if(!gameFieldPanel.isVisible()){
-						animator.stop();
+						animator.interrupt();
 						return;
 					}
 					timeStopped = false;
@@ -292,7 +292,7 @@ public class GameField extends JPanel implements Runnable {
 		if (base.isDefeated() && endTimer == null) {
 			endTimer = new Timer(1000, e -> {
 				gameFieldPanel.gameLost();
-				animator.stop();
+				animator.interrupt();
 			});
 			endTimer.setRepeats(false);
 			endTimer.start();
@@ -419,12 +419,14 @@ public class GameField extends JPanel implements Runnable {
 	@Override
 	public void run() {
 
+
 		long beforeTime, timeDiff, sleep;
 
 		beforeTime = System.currentTimeMillis();
 
-		while (true) {
-
+		while (!Thread.currentThread().isInterrupted()) {
+			System.out.println("shit");
+			try {
 			cycle();
 			repaint();
 
@@ -435,7 +437,7 @@ public class GameField extends JPanel implements Runnable {
 				sleep = 2;
 			}
 
-			try {
+
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 
@@ -443,6 +445,8 @@ public class GameField extends JPanel implements Runnable {
 
 				JOptionPane.showMessageDialog(this, msg, "Error",
 						JOptionPane.ERROR_MESSAGE);
+				Thread.currentThread().interrupt();
+				return;
 			}
 
 			beforeTime = System.currentTimeMillis();
