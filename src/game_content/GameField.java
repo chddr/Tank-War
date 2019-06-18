@@ -239,7 +239,7 @@ public class GameField extends JPanel implements Runnable {
 
 	private void checkTankRespawns(){
 		if (!playerTank.isVisible() && endTimer==null) {
-
+			System.out.println("Tank dead");
 			gameFieldPanel.playerTankDestroyed();
 			if (gameFieldPanel.getRespawns()!=-1){
 				spawnPlayerTank();
