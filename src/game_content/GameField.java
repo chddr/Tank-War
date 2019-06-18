@@ -222,6 +222,10 @@ public class GameField extends JPanel implements Runnable {
 		GameSound.stopTimeSound[0].play();
 	}
 
+	public void interrupt() {
+		animator.interrupt();
+	}
+
 	private void checkAllTanksCollision() {
 		for (Tank t : tanks) {
 			if(! (t instanceof EnemyTank && timeStopped) ) {
