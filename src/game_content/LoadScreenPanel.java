@@ -18,6 +18,10 @@ public class LoadScreenPanel extends JPanel {
 
     }
 
+    /**
+     * Creates JLabel with text "Stage: number"
+     * @param level number of level
+     */
     private void addLoadText(int level){
         JLabel text = new JLabel("Stage " + level);
         text.setFont(new Font(fontName,0,80));
@@ -25,11 +29,6 @@ public class LoadScreenPanel extends JPanel {
         text.setBounds(125,75,800,500);
         text.setOpaque(false);
         add(text);
-
-//        JLabel gif = new JLabel(new ImageIcon(ScaledImage.create("resources/sprites/menu/loading_screen/loading.gif",100,100)));
-//        gif.setBounds(300,400,200,200);
-//        gif.setOpaque(false);
-//        add(gif);
     }
 
 }

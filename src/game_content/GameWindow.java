@@ -6,13 +6,15 @@ import javax.swing.*;
 
 public class GameWindow extends JFrame {
 
+	//Window size
 	public static final int windowWidth = 800;
 	public static final int windowHeight = 660;
+	//Font name
 	public static final String fontName = "cootuecursessquare16x16";
+	//Number of respawns
 	private int respawns = 3;
 
 	public GameWindow() {
-
 		initUI();
 	}
 
@@ -38,10 +40,16 @@ public class GameWindow extends JFrame {
 
 	}
 
+	/**
+	 * Minus one respawn
+	 */
 	public void playerTankDestroyed(){
 		respawns--;
 	}
 
+	/**
+	 * Plus one respawn
+	 */
 	public void playerRespawnGained(){
 		respawns++;
 	}
@@ -55,8 +63,9 @@ public class GameWindow extends JFrame {
 	}
 
 
-
-
+	/**
+	 * Add font to windows environment
+	 */
 	private void createFont(){
 		try{
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -67,6 +76,9 @@ public class GameWindow extends JFrame {
 
 	}
 
+	/**
+	 * Set window icon
+	 */
 	private void setWindowIcon(){
 		Image iconImage =
 				Toolkit.getDefaultToolkit().createImage("resources/sprites/window/icon.png");

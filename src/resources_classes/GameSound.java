@@ -27,22 +27,6 @@ public class GameSound{
             new AudioClip(Paths.get("resources/music/battle/tank!.mp3").toUri().toString()),
             new AudioClip(Paths.get("resources/music/battle/aot.mp3").toUri().toString())
     };
-//    public static final String[] battleMusicPath = {
-//            "resources/music/battle/jojo_op1_8bit.mp3",
-//            "resources/music/battle/jojo_op2_8bit.mp3",
-//            "resources/music/battle/jojo_op3_8bit.mp3",
-//            "resources/music/battle/octopath_traveler_8bit.mp3",
-//            "resources/music/battle/megalovania_8bit.mp3"
-//
-//    };
-
-//    public static final String[] menuMusicPath = {
-//            "resources/music/menu/six_days_war.mp3",
-//            "resources/music/menu/paint_it_black.mp3",
-//            "resources/music/menu/i'm nuclear.mp3",
-//            "resources/music/menu/waste_land.mp3",
-//            "resources/music/menu/2+2.mp3"
-//    };
 
     private static final AudioClip[] menuMusic = {
             new AudioClip(Paths.get("resources/music/menu/six_days_war.mp3").toUri().toString()),
@@ -55,27 +39,6 @@ public class GameSound{
     private static AudioClip lastBattleMusic;
     private static AudioClip lastMenuMusic;
 
-//    public static AudioClip getMenuMusicInstance(){
-//        String nextMusic = "";
-//        do {
-//            nextMusic = menuMusicPath[random.nextInt(menuMusicPath.length)];
-//        } while (nextMusic.equals(lastMenuMusic));
-//        lastMenuMusic = nextMusic;
-//        AudioClip music = new AudioClip(Paths.get(nextMusic).toUri().toString());
-//        music.setVolume(menuMusicVolume);
-//        return music;
-//    }
-
-//    public static AudioClip getBattleMusicInstance(){
-//        String nextMusic = "";
-//        do {
-//            nextMusic = battleMusicPath[random.nextInt(battleMusicPath.length)];
-//        } while (nextMusic.equals(lastBattleMusic));
-//        lastBattleMusic = nextMusic;
-//        AudioClip music = new AudioClip(Paths.get(nextMusic).toUri().toString());
-//        music.setVolume(battleMusicVolume);
-//        return music;
-//    }
 
     public static AudioClip nextBattleMusic(){
         AudioClip nextMusic;
@@ -132,9 +95,5 @@ public class GameSound{
         audioClip.setVolume(1);
         return audioClip;
     }
-
-
-
-
 
 }

@@ -4,7 +4,6 @@ import javafx.scene.media.AudioClip;
 import map_tools.Level;
 import resources_classes.GameSound;
 import resources_classes.ScaledImage;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,25 +13,33 @@ import static game_content.GameWindow.*;
 
 public class MenuPanel extends JPanel {
 
+    //Music
     private AudioClip music;
+    //Level chooser
     private JComboBox levelsBox;
+    //Background gif
     private JLabel labelBackground;
+    //Music boolean
     private boolean musicStop;
+    //Parent component
     private GameWindow gameWindow;
     public MenuPanel(GameWindow gameWindow){
-        this.gameWindow = gameWindow;
 
+        this.gameWindow = gameWindow;
         setBounds(0,0,windowWidth,windowHeight);
         setLayout(null);
         addText();
         addPlayButton();
-        addLevelsComboBoc();
+        addLevelsComboBox();
         addBackground();
         playMusic();
         checkMusicPlaying();
 
     }
 
+    /**
+     * Creates background gif
+     */
     private void addBackground(){
 
         Image backgroundImage = ScaledImage.create("resources/sprites/menu/background2.gif",windowWidth,windowHeight-30);
@@ -42,12 +49,18 @@ public class MenuPanel extends JPanel {
 
     }
 
+    /**
+     * Play music
+     */
     private void playMusic() {
         music = GameSound.nextMenuMusic();
         music.play();
 
     }
 
+    /**
+     * Controls music playing endless
+     */
     private void checkMusicPlaying(){
         if(!musicStop){
             Timer timer = new Timer(5000, new ActionListener() {
@@ -65,6 +78,9 @@ public class MenuPanel extends JPanel {
         }
     }
 
+    /**
+     * Creates JLabel with text "Tank War"
+     */
     private void addText(){
         JLabel gameName = new JLabel("<html><div style='text-align: center;'>Tank<br>War</div></html>");
         gameName.setFont(new Font(fontName,1,100));
@@ -73,6 +89,9 @@ public class MenuPanel extends JPanel {
         add(gameName);
     }
 
+    /**
+     * Creates play button, which starts the game
+     */
     private void addPlayButton(){
         JButton playButton = new JButton("Play");
         playButton.setFont(new Font(fontName,1,50));
@@ -107,7 +126,10 @@ public class MenuPanel extends JPanel {
         add(playButton);
     }
 
-    private void addLevelsComboBoc(){
+    /**
+     * Creates JComboBox which contains levels
+     */
+    private void addLevelsComboBox(){
         levelsBox = new JComboBox();
         levelsBox.setRenderer(new CustomComboBoxCellRenderer());
         levelsBox.setFont(new Font(fontName,0,37));
@@ -122,6 +144,7 @@ public class MenuPanel extends JPanel {
         add(levelsBox);
     }
 
+    //Help class
     class CustomComboBoxCellRenderer extends JLabel implements ListCellRenderer {
 
         @Override
