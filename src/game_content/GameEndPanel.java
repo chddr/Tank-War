@@ -14,9 +14,14 @@ import static game_content.GameWindow.fontName;
 import static resources_classes.ScaledImage.darkRed;
 
 public class GameEndPanel extends JPanel {
+
+    //Music
     private AudioClip music;
+    //Parent component
     private GameWindow gameWindow;
+    //Count tanks destroyed
     private int tanksDestroyed;
+
     public GameEndPanel(GameWindow gameWindow, boolean win, int tanksDestroyed){
         this.gameWindow = gameWindow;
         this.tanksDestroyed = tanksDestroyed;
@@ -35,6 +40,9 @@ public class GameEndPanel extends JPanel {
 
     }
 
+    /**
+     * Creates button to menu
+     */
     private void addMenuButton(){
         JButton button = new JButton("Menu");
         button.setFont(new Font(fontName,0,25));
@@ -57,6 +65,9 @@ public class GameEndPanel extends JPanel {
         add(button);
     }
 
+    /**
+     * Creates JLabel with text "Stats"
+     */
     private void addGameStatsText(){
         JLabel text = new JLabel("Stats");
         text.setFont(new Font(fontName,0,50));
@@ -66,6 +77,9 @@ public class GameEndPanel extends JPanel {
         add(text);
     }
 
+    /**
+     * Creates JLabel with text "Stages completed: number of stages" and stage icon
+     */
     private void addGameStatsStages(){
         JLabel textTank = new JLabel("<html><font color=white>Stages completed: </font><font color=red>" + tanksDestroyed/GameField.ENEMY_COUNT +"</font></html>");
         textTank.setFont(new Font(fontName,0,30));
@@ -80,6 +94,9 @@ public class GameEndPanel extends JPanel {
         add(iconTank);
     }
 
+    /**
+     * Creates JLabel with text "Tanks destroyed: number of tanks " and tank icon
+     */
     private void addGameStatsTanks(){
         JLabel textTank = new JLabel("<html><font color=white>Tanks destroyed: </font><font color=red>" + tanksDestroyed +"</font></html>");
         textTank.setFont(new Font(fontName,0,30));
@@ -94,6 +111,9 @@ public class GameEndPanel extends JPanel {
         add(iconTank);
     }
 
+    /**
+     * Creates JLabel with text "Lifes left: number of lifes" and life icon
+     */
     private void addGameStatsLifes(){
         int respawns = (gameWindow.getRespawns()==-1)? gameWindow.getRespawns()+1: gameWindow.getRespawns();
         JLabel textLife = new JLabel("<html><font color=white>Lifes left: </font><font color=red>" + respawns +"</font></html>");
@@ -109,6 +129,9 @@ public class GameEndPanel extends JPanel {
         add(iconTank);
     }
 
+    /**
+     * Creates win screen with music
+     */
     private void win(){
         music = GameSound.getWinMusicInstance();
         music.play();
@@ -120,6 +143,9 @@ public class GameEndPanel extends JPanel {
         add(text);
     }
 
+    /**
+     * Creates defeat screen with music
+     */
     private void defeat(){
         music = GameSound.getDefeatMusicInstance();
         music.play();

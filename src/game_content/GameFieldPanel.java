@@ -4,7 +4,6 @@ import javafx.scene.media.AudioClip;
 import map_tools.Level;
 import resources_classes.GameSound;
 import resources_classes.ScaledImage;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,17 +13,25 @@ import static game_content.GameWindow.*;
 
 public class GameFieldPanel extends JPanel {
 
-
+    //Music
     private AudioClip music = GameSound.nextBattleMusic();
+    //Parent
     private GameWindow gameWindow;
+    //Game
     private GameField gameField;
+    //Interface
     private JLabel numberOfRespawns;
     private JLabel numberEnemyTanksLabel;
+    //Count of enemy tanks destroyed
     private int enemyTanksDestroyed;
+    //Current level
     private Level level;
+    //Booleans which control music
     private boolean musicMute;
     private boolean musicStop;
+    //Interface mute button
     private JButton muteButton;
+    //Icon for mute button
     private Image mutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/mute_button.png",50,50);
     private Image unmutedImage = ScaledImage.create("resources/sprites/menu/buttons_icon/unmute_button.png",50,50);
 
@@ -44,6 +51,9 @@ public class GameFieldPanel extends JPanel {
 
     }
 
+    /**
+     * Controls music playing endless
+     */
     private void checkMusicPlaying(){
         if(!musicStop){
             Timer timer = new Timer(5000, new ActionListener() {
@@ -61,6 +71,9 @@ public class GameFieldPanel extends JPanel {
         }
     }
 
+    /**
+     * Creates JLabel with tank icon and number
+     */
     private void addEnemyTankLabelAndText(){
         Image heart = ScaledImage.create("resources/sprites/menu/enemy_tank_icon.png",75,75);
         JLabel label = new JLabel(new ImageIcon(heart));
@@ -76,6 +89,9 @@ public class GameFieldPanel extends JPanel {
 
 
 
+    /**
+     * Creates JLabel with life icon and number
+     */
     private void addLifeIcon(){
         Image heart = ScaledImage.create("resources/sprites/menu/heart_icon.png",75,75);
         JLabel label = new JLabel(new ImageIcon(heart));
@@ -89,19 +105,25 @@ public class GameFieldPanel extends JPanel {
         add(numberOfRespawns);
     }
 
+    /**
+     * Creates JLabel with flag icon and number
+     */
     private void addFlagIconAndInfo(){
         Image flagImage = ScaledImage.create("resources/sprites/menu/flag_icon.png",100,100);
         JLabel flag = new JLabel(new ImageIcon(flagImage));
         flag.setBounds(710, 380, 100, 100);
         add(flag);
         JLabel number = new JLabel(level.ordinal()+1+"x");
-        number.setFont(new Font(fontName,0,40));
+        number.setFont(new Font(fontName,0,32));
         number.setForeground(Color.WHITE);
         number.setBounds(635, 400, 100, 100);
         add(number);
     }
 
 
+    /**
+     * Create game field
+     */
     private void addGameField(){
         gameField = new GameField(level, this);
         gameField.setBounds(0,0,624,624);
@@ -110,8 +132,10 @@ public class GameFieldPanel extends JPanel {
         music.play();
     }
 
+    /**
+     * Creates interface mute button
+     */
     private void addMuteButton(){
-
         muteButton = new JButton(new ImageIcon(unmutedImage));
         muteButton.setBounds(640,540,50,50);
         muteButton.setBackground(Color.DARK_GRAY);
@@ -136,6 +160,9 @@ public class GameFieldPanel extends JPanel {
         add(muteButton);
     }
 
+    /**
+     * Creates exit to menu button
+     */
     private void addExitToMenuButton(){
         JButton exitButton = new JButton(new ImageIcon(ScaledImage.create("resources/sprites/menu/buttons_icon/exit_button.png",50,50)));
         exitButton.setBackground(Color.DARK_GRAY);
@@ -157,10 +184,16 @@ public class GameFieldPanel extends JPanel {
         add(exitButton);
     }
 
+    /**
+     * Request focus for game field
+     */
     public void requestFocusField(){
         gameField.requestFocus();
     }
 
+    /**
+     * Method which is called to change level
+     */
     public void roundWon(){
         musicStop = true;
         music.stop();
@@ -190,14 +223,24 @@ public class GameFieldPanel extends JPanel {
         gameWindow.repaint();
     }
 
+    /**
+     * Method which is called when player looses
+     */
     public void gameLost(){
         gameEnd(false);
     }
 
+    /**
+     * Method which is called when player wins
+     */
     private void gameWon(){
         gameEnd(true);
     }
 
+    /**
+     * Main game end method, calls end panel with stats and exot to menu
+     * @param gameResult
+     */
     private void gameEnd(boolean gameResult){
         setVisible(false);
         gameWindow.remove(this);
@@ -210,6 +253,9 @@ public class GameFieldPanel extends JPanel {
 
     }
 
+    /**
+     * Minus one respawn and change JLabel
+     */
     public void playerTankDestroyed(){
         gameWindow.playerTankDestroyed();
         int respawns = gameWindow.getRespawns();
@@ -219,6 +265,9 @@ public class GameFieldPanel extends JPanel {
 
     }
 
+    /**
+     * Count enemy tanks destroyed
+     */
     public void enemyTankDestroyed(){
         enemyTanksDestroyed++;
         numberEnemyTanksLabel.setText(GameField.ENEMY_COUNT-enemyTanksDestroyed+"x");
@@ -238,11 +287,17 @@ public class GameFieldPanel extends JPanel {
         return gameWindow.getRespawns();
     }
 
+    /**
+     * Plus one respawn
+     */
     public void playerRespawnGained(){
         gameWindow.playerRespawnGained();
         numberOfRespawns.setText(gameWindow.getRespawns()+"x");
     }
 
+    /**
+     * Stop music
+     */
     public void musicStop(){
         muteButton.setIcon(new ImageIcon(mutedImage));
         requestFocusField();
@@ -250,6 +305,9 @@ public class GameFieldPanel extends JPanel {
         music.stop();
     }
 
+    /**
+     * Play music
+     */
     public void musicPlay(){
         music.stop();
         music = GameSound.nextBattleMusic();
