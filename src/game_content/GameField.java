@@ -180,12 +180,18 @@ public class GameField extends JPanel implements Runnable {
 						Timer timer = new Timer(4000, new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-//								gameFieldPanel.musicStop();
+								gameFieldPanel.musicStop();
 								timeStopped = true;
 								gameFieldPanel.requestFocusField();
 								timeStopTimer = new Timer(5000, k -> {
-									timeStopped = false;
-//									gameFieldPanel.musicPlay();
+									if(gameFieldPanel.isVisible()){
+										timeStopped = false;
+										if (!gameFieldPanel.isVisible()){
+											Thread.currentThread().stop();
+											return;
+										}
+										gameFieldPanel.musicPlay();
+									}
 								});
 								timeStopTimer.start();
 								timeStopTimer.setRepeats(false);
