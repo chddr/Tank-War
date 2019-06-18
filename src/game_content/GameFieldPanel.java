@@ -147,9 +147,10 @@ public class GameFieldPanel extends JPanel {
                 musicStop=true;
                 music.stop();
                 gameWindow.remove(GameFieldPanel.this);
+                gameField.interrupt();
+                gameWindow.setRespawns(3);
                 gameWindow.add(new MenuPanel(gameWindow));
                 gameWindow.repaint();
-//                roundWon();
 
             }
         });
@@ -200,7 +201,7 @@ public class GameFieldPanel extends JPanel {
     private void gameEnd(boolean gameResult){
         setVisible(false);
         gameWindow.remove(this);
-        gameField.getAnimator().stop();
+        gameField.interrupt();
         musicStop=true;
         music.stop();
         GameEndPanel gameEndPanel = new GameEndPanel(gameWindow, gameResult, level.ordinal()*GameField.ENEMY_COUNT+enemyTanksDestroyed);
