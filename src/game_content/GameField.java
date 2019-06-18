@@ -437,18 +437,16 @@ public class GameField extends JPanel implements Runnable {
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleep = DELAY - timeDiff;
 
-			if (sleep < 0) {
+			if (sleep < 0)
 				sleep = 2;
-			}
 
-
-				Thread.sleep(sleep);
+			Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 
-				String msg = String.format("Thread interrupted: %s", e.getMessage());
-
-				JOptionPane.showMessageDialog(this, msg, "Error",
-						JOptionPane.ERROR_MESSAGE);
+//				String msg = String.format("Thread interrupted: %s", e.getMessage());
+//
+//				JOptionPane.showMessageDialog(this, msg, "Error",
+//						JOptionPane.ERROR_MESSAGE);
 				Thread.currentThread().interrupt();
 				return;
 			}

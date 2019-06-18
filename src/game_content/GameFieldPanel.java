@@ -148,6 +148,7 @@ public class GameFieldPanel extends JPanel {
                 music.stop();
                 gameWindow.remove(GameFieldPanel.this);
                 gameField.interrupt();
+                gameWindow.setRespawns(3);
                 gameWindow.add(new MenuPanel(gameWindow));
                 gameWindow.repaint();
 
